@@ -1,27 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:event_app/controllers/favorite_controller.dart';
 
-class ExhibitorDetailsScreen extends StatelessWidget {
+class ExhibitorDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> exhibitor;
 
   ExhibitorDetailsScreen({required this.exhibitor});
 
   @override
-  Widget build(BuildContext context) {
-    final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
-    final kiosque = exhibitor['kiosque'] ?? 'N/A';
-    final logoUrl = exhibitor['urlImagePublique'] ?? '';
-    final partenaire = exhibitor['partenariat'] ?? '';
-    final description = exhibitor['description']?.replaceAll(RegExp(r'<[^>]*>'), '').replaceAll('&nbsp;', ' ') ?? '';
-    final partenaireText = partenaire.replaceAll('[', '').replaceAll(']', '');
-    final siteInternetDeLEntreprise = exhibitor['siteInternetDeLEntreprise'] ?? '';
-    final urlPub = exhibitor['urlPub'] ?? '';
+  _ExhibitorDetailsScreenState createState() => _ExhibitorDetailsScreenState();
+}
 
+class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
+  final FavoriteController _favoriteController = FavoriteController();
+  bool isFavoritesLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorites();
+  }
+
+  Future<void> _loadFavorites() async {
+    await _favoriteController.loadFavorites();
+    setState(() {
+      isFavoritesLoaded = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final entreprise = widget.exhibitor['entreprise'] ?? 'Nom inconnu';
+    final kiosque = widget.exhibitor['kiosque'] ?? 'N/A';
+    final logoUrl = widget.exhibitor['urlImagePublique'] ?? '';
+    final partenaire = widget.exhibitor['partenariat'] ?? '';
+    final description = widget.exhibitor['partenaireSeulementDescription']?.replaceAll(RegExp(r'<[^>]*>'), '').replaceAll('&nbsp;', ' ') ?? '';
+    final partenaireText = partenaire.replaceAll('[', '').replaceAll(']', '');
+    final siteInternetDeLEntreprise = widget.exhibitor['siteInternetDeLEntreprise'] ?? '';
+    final urlPub = widget.exhibitor['urlPub'] ?? '';
+    final urlImagePub = widget.exhibitor['imagePublicitaire'] ?? '';
+
+    if (!isFavoritesLoaded) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(200), // Adjust height as needed
+        preferredSize: Size.fromHeight(250), // Adjust height as needed
         child: Stack(
           children: [
             SizedBox(
@@ -55,120 +84,171 @@ class ExhibitorDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start, // Align the image to the top
-              children: [
-                 Column(
-                  children: [
-                    Image.network(
-                      logoUrl,
-                      width: MediaQuery.of(context).size.width / 3,
-                      height: MediaQuery.of(context).size.width / 3,
+            Text(
+              "EXPOSANTS ET PARTENAIRES",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 10),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
+                  ),
+                  child: Image.network(
+                    logoUrl,
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.width / 2,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+
+            // Partenaire
+            if (partenaireText.isNotEmpty)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    partenaireText,
+                    style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            SizedBox(height: 10),
+
+            // Entreprise
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  entreprise,
+                  style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+
+            // Kiosque
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 2),
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 252, 237, 24), // Color #fcd307 with 0.5 opacity
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Text(
+                    "Kiosque: $kiosque",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+
+            // Favorite Icon
+            IconButton(
+              icon: Icon(
+                _favoriteController.isFavorite(entreprise)
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: _favoriteController.isFavorite(entreprise)
+                    ? Colors.red
+                    : Colors.grey,
+              ),
+              onPressed: () {
+                setState(() {
+                  _favoriteController.toggleFavorite(entreprise);
+                });
+              },
+            ),
+
+            // Description
+            if (description.isNotEmpty)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    description,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            SizedBox(height: 25),
+
+            // Image Pub
+            if (partenaire.isNotEmpty)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      final url = Uri.parse(urlPub);
+                      print('Attempting to launch URL: $url');
+                      if (await canLaunchUrl(url)) {
+                        print('Launching URL: $url');
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                      } else {
+                        print('Could not launch URL: $url');
+                        throw 'Could not launch $url';
+                      }
+                    },
+                    child: Image.network(
+                      urlImagePub,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) =>
                           Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                     ),
-                    if (siteInternetDeLEntreprise.isNotEmpty) ...[
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: () async {
-                          final url = Uri.parse(siteInternetDeLEntreprise);
-                          print('Attempting to launch URL: $url');
-                          if (await canLaunchUrl(url)) {
-                            print('Launching URL: $url');
-                            await launchUrl(url, mode: LaunchMode.externalApplication);
-                          } else {
-                            print('Could not launch URL: $url');
-                            throw 'Could not launch $url';
-                          }
-                        },
-                        child: Text(
-                          "VOIR LE SITE WEB",
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-                SizedBox(width: 10), // Add some space between the image and the text
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          child: Text(
-                            partenaireText,
-                            style: TextStyle(fontSize:18, color: Colors.black, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      Text(
-                        entreprise,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(height: 5),
-                     Container(
-                        padding: EdgeInsets.symmetric(horizontal: 2),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 255, 227, 85), // Color #fcd307 with 0.5 opacity
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          "Kiosque: $kiosque",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 30),
-                      if (partenaireText.isNotEmpty) ...[
-                        SizedBox(height: 10),
-                        Text(
-                          description,
-                          style: TextStyle(color: Colors.grey[700]),
-                          textAlign: TextAlign.justify,
-                        ),
-                      ],
-                    ],
                   ),
                 ),
-              ],
-            ),
-            if (partenaireText.isNotEmpty) ...[
-              SizedBox(height: 10), // Add some space between the rows
-              Row(
-                children: [
-                  Expanded(
-                    flex: 2, // Take 33% of the screen width
-                    child: Container(),
-                  ),
-                  Expanded(
-                    flex: 4, // Take 66% of the screen width
-                    child: GestureDetector(
-                      onTap: () async {
-                        final url = Uri.parse(urlPub);
-                        print('Attempting to launch URL: $url');
-                        if (await canLaunchUrl(url)) {
-                          print('Launching URL: $url');
-                          await launchUrl(url, mode: LaunchMode.externalApplication);
-                        } else {
-                          print('Could not launch URL: $url');
-                          throw 'Could not launch $url';
-                        }
-                      },
-                      child: Image.network(
-                        "https://static.wixstatic.com/media/0025ee_3947a0b250754aeb923cc1aef01bf672~mv2.jpg/v1/fill/w_1080,h_1080,al_c,q_85,enc_auto/Mtrenka%20(1).jpg",
-                        fit: BoxFit.cover,
-                      ),
+              ),
+              SizedBox(height: 30),
+
+            if (siteInternetDeLEntreprise.isNotEmpty)
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // Black background
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1), // Button size
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0), // Rectangular shape
                     ),
                   ),
-                ],
+                  onPressed: () async {
+                    final url = Uri.parse(siteInternetDeLEntreprise);
+                    print('Attempting to launch URL: $url');
+                    if (await canLaunchUrl(url)) {
+                      print('Launching URL: $url');
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } else {
+                      print('Could not launch URL: $url');
+                      throw 'Could not launch $url';
+                    }
+                  },
+                  child: Text(
+                    "VOIR LE SITE INTERNET",
+                    style: TextStyle(color: Colors.white, fontSize: 12), // White text with font size 16
+                  ),
+                ),
               ),
-            ],
+            SizedBox(height: 10),
           ],
         ),
       ),

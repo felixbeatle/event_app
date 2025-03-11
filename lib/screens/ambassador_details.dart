@@ -17,7 +17,7 @@ class AmbassadorDetailsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(200), // Adjust height as needed
+        preferredSize: Size.fromHeight(250), // Adjust height as needed
         child: Stack(
           children: [
             SizedBox(
@@ -53,7 +53,9 @@ class AmbassadorDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child:  Text(
               "AMBASSADEURS 2025",
               style: TextStyle(
                 fontSize: 20,
@@ -61,6 +63,8 @@ class AmbassadorDetailsScreen extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
+            ),
+          
             SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -74,31 +78,42 @@ class AmbassadorDetailsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Text(
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Center(
+              child: Text(
               name,
-              style: TextStyle(fontSize: 14),textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, )
+              ,textAlign: TextAlign.center,
+            ),
+            ),
             ),
             SizedBox(height: 40),
-            Text(
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
               description,
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.justify,
             ),
+            ),
             if (note.isNotEmpty) ...[
               SizedBox(height: 20),
-              Text(
-                "Note",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.pink),
-              ),
-              SizedBox(height: 10),
-              Text(
+                 Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
                 note,
                 style: TextStyle(fontSize: 16),
                 textAlign: TextAlign.justify,
               ),
+            ),
+              
             ],
             if (detailsUrl.isNotEmpty) ...[
               SizedBox(height: 20),
+              Center(
+                child:
+                
               GestureDetector(
                 onTap: () async {
                   final url = Uri.parse(detailsUrl);
@@ -114,11 +129,13 @@ class AmbassadorDetailsScreen extends StatelessWidget {
                 child: Text(
                   "En savoir plus",
                   style: TextStyle(
-                    color: Colors.pink,
+                    color: Colors.blue,
                   ),
                 ),
               ),
+            ),
             ],
+
             SizedBox(height: 40),
           ],
         ),

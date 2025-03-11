@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'exhibitors_screen.dart';
 import 'conferences_screen.dart';
-import 'favorites_screen.dart';
+import 'favorite_screen.dart'; // Import the FavoriteScreen
 import 'ambassadors_screen.dart';
 import 'activities_screen.dart';
 import 'contributors_screen.dart'; // Import the ContributorsScreen
@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     ExhibitorsScreen(),
     ActivitiesScreen(),
     ConferencesScreen(),
-    FavoritesScreen(),
+    FavoriteScreen(), // Add FavoriteScreen here
     ContributorsScreen(), // Add ContributorsScreen here
   ];
 
@@ -72,46 +72,49 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            SizedBox(height: 50), // Spacer for header
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text("Accueil"),
-              onTap: () => _onItemTapped(0),
-            ),
-            ListTile(
-              leading: Icon(Icons.people),
-              title: Text("Ambassadeurs"),
-              onTap: () => _onItemTapped(1),
-            ),
-            ListTile(
-              leading: Icon(Icons.store),
-              title: Text("Exposants"),
-              onTap: () => _onItemTapped(2),
-            ),
-            ListTile(
-              leading: Icon(Icons.local_activity),
-              title: Text("Activités"),
-              onTap: () => _onItemTapped(3),
-            ),
-            ListTile(
-              leading: Icon(Icons.event),
-              title: Text("Conférences"),
-              onTap: () => _onItemTapped(4),
-            ),
-            ListTile(
-              leading: Icon(Icons.favorite),
-              title: Text("Favoris"),
-              onTap: () => _onItemTapped(5),
-            ),
-            ListTile(
-              leading: Icon(Icons.group),
-              title: Text("Partenaires"),
-              onTap: () => _onItemTapped(6),
-            ),
-          ],
+        child: Container(
+          color: Color.fromARGB(255, 255, 255, 255), // Set the background color of the drawer to a custom color
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              SizedBox(height: 50), // Spacer for header
+              ListTile(
+                leading: Icon(Icons.home, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Accueil", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () => _onItemTapped(0),
+              ),
+              ListTile(
+                leading: Icon(Icons.people, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Ambassadeurs", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () => _onItemTapped(1),
+              ),
+              ListTile(
+                leading: Icon(Icons.star, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Exposants", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () => _onItemTapped(2),
+              ),
+              ListTile(
+                leading: Icon(Icons.play_circle_sharp, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Activités", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () => _onItemTapped(3),
+              ),
+              ListTile(
+                leading: Icon(Icons.mic, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Conférences", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () => _onItemTapped(4),
+              ),
+              ListTile(
+                leading: Icon(Icons.check, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Favoris", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () => _onItemTapped(5),
+              ),
+              ListTile(
+                leading: Icon(Icons.favorite, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Partenaires", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () => _onItemTapped(6),
+              ),
+            ],
+          ),
         ),
       ),
       body: _screens[_selectedIndex],

@@ -63,12 +63,15 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "PARTENAIRES",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Text(
+                          "PARTENAIRES",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                       Expanded(
@@ -78,7 +81,6 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                             final exhibitor = exhibitors[index];
                             
                             final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
-                            final kiosque = exhibitor['kiosque'] ?? 'N/A';
                             final logoUrl = exhibitor['urlImagePublique'] ?? testLogoUrl; // Use the actual logo URL or fallback to test URL
                             final partenaire = exhibitor['partenariat'] ?? '';
 
@@ -98,18 +100,18 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                                         ),
                                       );
                                     },
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Image.network(
-                                          logoUrl, // Use the actual logo URL
-                                          width: MediaQuery.of(context).size.width / 2,
-                                          height: MediaQuery.of(context).size.width / 2,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
-                                        ),
-                                      ],
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
+                                      ),
+                                      child: Image.network(
+                                        logoUrl, // Use the actual logo URL
+                                        width: MediaQuery.of(context).size.width / 1.5,
+                                        height: MediaQuery.of(context).size.width / 1.5,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) =>
+                                            Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(height: 10),
@@ -120,7 +122,7 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                                       child: Text(
                                         entreprise,
                                         textAlign: TextAlign.center, // Center the text within the Text widget
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                                         softWrap: true, // Ensure text wraps on whole words
                                         overflow: TextOverflow.visible, // Handle overflow gracefully
                                       ),
@@ -135,20 +137,7 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                                       ),
                                     ),
                                   SizedBox(height: 5),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 255, 227, 85), // Color #fcd307 with 0.5 opacity
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      "Kiosque: $kiosque",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
+                                
                                 ],
                               ),
                             );

@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:event_app/services/exhibitor_service.dart';
 import 'package:event_app/screens/exhibitor_details_screen.dart';
+import 'package:event_app/controllers/favorite_controller.dart'; // Import the FavoriteController
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class ExhibitorsScreen extends StatefulWidget {
   @override
@@ -14,10 +18,13 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
   static const String testLogoUrl =
       "https://static.wixstatic.com/media/0025ee_725045c7d09d4de58fc9bf7cac135334~mv2.jpg/v1/fill/w_1080,h_1080,al_c,q_85,enc_auto/Troubadour%20-%20Logo.jpg";
 
+  final FavoriteController _favoriteController = FavoriteController(); // Initialize the FavoriteController
+
   @override
   void initState() {
     super.initState();
     loadExhibitors();
+    _favoriteController.loadFavorites(); // Load favorites
   }
 
   Future<void> loadExhibitors() async {
@@ -31,6 +38,13 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
       if (data.isNotEmpty) {
         print("🔹 First exhibitor sample: ${data.sublist(0, data.length > 3 ? 3 : data.length)}");
       }
+
+      // Sort exhibitors by the 'entreprise' field
+      data.sort((a, b) {
+        final entrepriseA = (a['entreprise'] ?? '').toString().toLowerCase();
+        final entrepriseB = (b['entreprise'] ?? '').toString().toLowerCase();
+        return entrepriseA.compareTo(entrepriseB);
+      });
 
       setState(() {
         exhibitors = data;
@@ -60,13 +74,16 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
                         "EXPOSANT ET PARTENAIRES",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
+                      ),
                       ),
                       Expanded(
                         child: ListView.builder(
@@ -98,15 +115,19 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                                     child: Stack(
                                       alignment: Alignment.center,
                                       children: [
-                                        Image.network(
-                                          logoUrl, // Use the actual logo URL
-                                          width: MediaQuery.of(context).size.width / 2,
-                                          height: MediaQuery.of(context).size.width / 2,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
+                                          ),
+                                          child: Image.network(
+                                            logoUrl, // Use the actual logo URL
+                                            width: MediaQuery.of(context).size.width / 2,
+                                            height: MediaQuery.of(context).size.width / 2,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) =>
+                                                Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                          ),
                                         ),
-                                
                                       ],
                                     ),
                                   ),
@@ -139,7 +160,7 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                     decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 255, 227, 85), // Color #fcd307 with 0.5 opacity
+                                      color: Color.fromARGB(255, 252, 237, 24), // Color #fcd307 with 0.5 opacity
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Text(
@@ -149,6 +170,22 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  IconButton(
+                                    icon: Icon(
+                                      _favoriteController.isFavorite(entreprise)
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: _favoriteController.isFavorite(entreprise)
+                                          ? Colors.red
+                                          : Colors.grey,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _favoriteController.toggleFavorite(entreprise);
+                                      });
+                                    },
                                   ),
                                 ],
                               ),

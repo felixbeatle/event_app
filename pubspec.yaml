@@ -16,6 +16,8 @@ dependencies:
   # 📱 Icônes Cupertino (iOS style)
   cupertino_icons: ^1.0.8
 
+  path_provider: ^2.0.11
+  
   # 📡 API Wix - Requêtes HTTP
   http: ^0.13.6
 

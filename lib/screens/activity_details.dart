@@ -49,7 +49,7 @@ class ActivityDetailsScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -63,14 +63,14 @@ class ActivityDetailsScreen extends StatelessWidget {
                       Center(
                         child: Text(
                           jour,
-                          style: TextStyle(fontSize: 16, color: Colors.pink, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 18, color: const Color.fromARGB(255, 0, 0, 0), fontWeight: FontWeight.bold),
                         ),
                       ),
                       SizedBox(height: 5),
                       Center(
                         child: Text(
                           horaire,
-                          style: TextStyle(fontSize: 16, color: Colors.pink, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 18, color: const Color.fromARGB(255, 0, 0, 0), fontWeight: FontWeight.bold),
                         ),
                       ),
                       SizedBox(height: 5),
@@ -96,12 +96,17 @@ class ActivityDetailsScreen extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 6,
-                  child: Image.network(
-                    url,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
+                    ),
+                    child: Image.network(
+                      url,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                    ),
                   ),
                 ),
               ],
@@ -110,18 +115,23 @@ class ActivityDetailsScreen extends StatelessWidget {
             Center(
               child: Text(
                 title,
-                style: TextStyle(fontSize: 16, color: Colors.pink, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22, color: const Color.fromARGB(255, 0, 0, 0), fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: 10),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child:
             Text(
               description,
               style: TextStyle(fontSize: 16, color: Colors.black),
               textAlign: TextAlign.justify,
             ),
+            ),
             SizedBox(height: 40),
+            
           ],
         ),
+
       ),
     );
   }
