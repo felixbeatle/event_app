@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white, // Ensure white background
-      body: SingleChildScrollView( // Make the content scrollable
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Image Accueil.jpg
-            Image.asset(
-              "assets/images/Accueil.jpg", // Ensure this image exists in assets/images
-              width: double.infinity, // Full width
-              height: 650, // Adjust height as needed
-              fit: BoxFit.contain, // Cover the available space
-            ),
-
-            SizedBox(height: 25), // Space between image and button
-
-            // "Inscrivez-vous ici" Button
-            ElevatedButton(
-              onPressed: () {
-                // TODO: Add action when button is clicked
-                print("Inscription button clicked!");
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Image Accueil.jpg
+          Image.asset(
+            "assets/images/Accueil.jpg", // Ensure this image exists in assets/images
+            width: double.infinity, // Full width
+            height: 650, // Adjust height as needed
+            fit: BoxFit.contain, // Cover the available space
+          ),
+          Spacer(), // Push the button to the bottom
+          // "Inscrivez-vous ici" Button
+          Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                final url = Uri.parse("https://www.salondelapprentissage.ca/event-details/salon-de-lapprentissage-de-montreal2025");
+                try {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                } catch (e) {
+                  print('Could not launch $url: $e');
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black, // Black background
@@ -38,8 +41,9 @@ class HomeScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 20), // White text
               ),
             ),
-          ],
-        ),
+          ),
+          Spacer(), // Push the button to the bottom
+        ],
       ),
     );
   }

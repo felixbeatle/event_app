@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:event_app/controllers/favorite_controller.dart'; // Import the FavoriteController
+import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 
 class ConferenceDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> conference;
@@ -46,21 +47,33 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
       );
     }
 
+    bool isFavorite = _favoriteController.isFavorite(title);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(200), // Adjust height as needed
+        preferredSize: Size.fromHeight(325), // Adjust height as needed
         child: Stack(
           children: [
-            SizedBox(
-              width: double.infinity,
-              height: 300,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/Header.jpg"),
-                    fit: BoxFit.contain,
-                    alignment: Alignment.center,
+            Positioned(
+              top: 0,
+              child: SizedBox(
+                height: 50, // Add space above the header image
+                width: double.infinity,
+              ),
+            ),
+            Positioned(
+              top: 50, // Adjust the position of the image
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 300,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/Header.jpg"),
+                      fit: BoxFit.contain,
+                      alignment: Alignment.center,
+                    ),
                   ),
                 ),
               ),
@@ -68,8 +81,8 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
             Positioned(
               top: 30,
               left: 10,
-              child: Builder(
-                builder: (context) => IconButton(
+              child: SafeArea(
+                child: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black, size: 32),
                   onPressed: () {
                     Navigator.pop(context);
@@ -81,7 +94,7 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -136,26 +149,31 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
             ),
             SizedBox(height: 10),
             Center(
-              child: IconButton(
-                icon: Icon(
-                  _favoriteController.isFavorite(title)
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                  color: _favoriteController.isFavorite(title)
-                      ? Colors.red
-                      : Colors.grey,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _favoriteController.toggleFavorite(title);
-                  });
-                },
+              child: Column(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? Colors.red : Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _favoriteController.toggleFavorite(title);
+                      });
+                    },
+                  ),
+                  if (!isFavorite)
+                    Text(
+                      "Ajouter au favoris",
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                ],
               ),
             ),
             SizedBox(height: 10),
             Text(
               description,
-              style: TextStyle(fontSize: 14, color: Colors.black),
+              style: TextStyle(fontSize: 16, color: Colors.black),
               textAlign: TextAlign.justify,
             ),
             SizedBox(height: 30),
@@ -179,7 +197,37 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
               style: TextStyle(fontSize: 16, color: Colors.black),
               textAlign: TextAlign.justify,
             ),
+            SizedBox(height: 40),
+            Center(
+              child: Text(
+                "PROCUREZ VOUS UN PASSEPORT VIP",
+                style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+            ),
             SizedBox(height: 10),
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // Black background
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1), // Button size
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0), // Rectangular shape
+                    ),
+                  ),
+                onPressed: () async {
+                  final url = Uri.parse("https://www.salondelapprentissage.ca/event-details/salon-de-lapprentissage-de-montreal2025");
+                  try {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  } catch (e) {
+                    print('Could not launch $url: $e');
+                  }
+                },
+                child: Text(
+                  "ICI",
+                  style: TextStyle(fontSize: 14, color: Colors.white), // Text color
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -65,7 +65,8 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Text(
+                        child: 
+                        Center(child:Text(
                           "PARTENAIRES",
                           style: TextStyle(
                             fontSize: 22,
@@ -74,6 +75,8 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                           ),
                         ),
                       ),
+                      ),
+                      SizedBox(height: 25),
                       Expanded(
                         child: ListView.builder(
                           itemCount: exhibitors.length,

@@ -1,4 +1,4 @@
-package com.example.event_app
+package com.felixservice.salonapprentissage;
 
 import io.flutter.embedding.android.FlutterActivity
 

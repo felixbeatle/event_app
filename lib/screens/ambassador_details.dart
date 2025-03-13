@@ -13,22 +13,34 @@ class AmbassadorDetailsScreen extends StatelessWidget {
     final description = ambassador['texteAmbassadeur']?.replaceAll(RegExp(r'<[^>]*>'), '').replaceAll('&nbsp;', ' ') ?? 'Aucune description disponible';
     final note = ambassador['note']?.replaceAll(RegExp(r'<[^>]*>'), '').replaceAll('&nbsp;', ' ') ?? '';
     final detailsUrl = ambassador['dtailsConfrences'] ?? '';
-
+    final fonction = ambassador['fonction'] ?? '';
+    final logo = ambassador['logo'] ?? '';
+    final logolink = ambassador['url'] ?? '';
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(250), // Adjust height as needed
+        preferredSize: Size.fromHeight(325), // Adjust height as needed
         child: Stack(
           children: [
-            SizedBox(
-              width: double.infinity,
-              height: 300,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/Header.jpg"),
-                    fit: BoxFit.contain,
-                    alignment: Alignment.center,
+            Positioned(
+              top: 0,
+              child: SizedBox(
+                height: 50, // Add space above the header image
+                width: double.infinity,
+              ),
+            ),
+            Positioned(
+              top: 50, // Adjust the position of the image
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 300,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/Header.jpg"),
+                      fit: BoxFit.contain,
+                      alignment: Alignment.center,
+                    ),
                   ),
                 ),
               ),
@@ -36,8 +48,8 @@ class AmbassadorDetailsScreen extends StatelessWidget {
             Positioned(
               top: 30,
               left: 10,
-              child: Builder(
-                builder: (context) => IconButton(
+              child: SafeArea(
+                child: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black, size: 32),
                   onPressed: () {
                     Navigator.pop(context);
@@ -49,22 +61,22 @@ class AmbassadorDetailsScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(25.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child:  Text(
-              "AMBASSADEURS 2025",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+              child: Center(child:
+              Text(
+                "AMBASSADEURS 2025",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
-            ),
-            ),
-          
+            ),),
             SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -78,64 +90,94 @@ class AmbassadorDetailsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-             Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Center(
+                child: Text(
+                  name,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Text(
-              name,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, )
-              ,textAlign: TextAlign.center,
-            ),
-            ),
+                fonction,
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: 40),
-             Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Text(
-              description,
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.justify,
-            ),
-            ),
-            if (note.isNotEmpty) ...[
-              SizedBox(height: 20),
-                 Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(
-                note,
+                description,
                 style: TextStyle(fontSize: 16),
                 textAlign: TextAlign.justify,
               ),
             ),
-              
+        
+            if (note.isNotEmpty) ...[
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  note,
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.justify,
+                ),
+              ),
             ],
             if (detailsUrl.isNotEmpty) ...[
               SizedBox(height: 20),
               Center(
-                child:
-                
-              GestureDetector(
-                onTap: () async {
-                  final url = Uri.parse(detailsUrl);
-                  print('Attempting to launch URL: $url');
-                  if (await canLaunchUrl(url)) {
-                    print('Launching URL: $url');
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // Black background
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1), // Button size
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0), // Rectangular shape
+                    ),
+                  ),
+                  onPressed: () async {
+                    final url = Uri.parse(detailsUrl);
+                     try {
                     await launchUrl(url, mode: LaunchMode.externalApplication);
-                  } else {
-                    print('Could not launch URL: $url');
-                    throw 'Could not launch $url';
+                  } catch (e) {
+                    print('Could not launch $url: $e');
                   }
-                },
-                child: Text(
-                  "En savoir plus",
-                  style: TextStyle(
-                    color: Colors.blue,
+                  },
+                  child: Text(
+                    "Voir la Conférence",
+                    style: TextStyle(fontSize: 12, color: Colors.white),
                   ),
                 ),
               ),
-            ),
             ],
-
+             Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      final url = Uri.parse(logolink);
+                       try {
+                          await launchUrl(url, mode: LaunchMode.externalApplication);
+                        } catch (e) {
+                          print('Could not launch $url: $e');
+                        }
+                    },
+                    child: logo.isNotEmpty
+                        ? Image.network(
+                            logo,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(), // Return an empty container if there's an error
+                          )
+                        : Container(), // Return an empty container if urlImagePub is empty
+                  ),
+                ),
+              ),
             SizedBox(height: 40),
           ],
         ),

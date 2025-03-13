@@ -2,7 +2,7 @@
     
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="event_app"
+        android:label="Salon de l’apprentissage"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:exported="true"

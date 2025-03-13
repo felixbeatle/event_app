@@ -6,6 +6,7 @@ import 'favorite_screen.dart'; // Import the FavoriteScreen
 import 'ambassadors_screen.dart';
 import 'activities_screen.dart';
 import 'contributors_screen.dart'; // Import the ContributorsScreen
+import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 
 class MainScreen extends StatefulWidget {
   @override
@@ -32,6 +33,15 @@ class _MainScreenState extends State<MainScreen> {
     Navigator.pop(context); // Close the drawer after selecting an item
   }
 
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool showHeaderImage = _selectedIndex != 0; // Hide image on HomeScreen
@@ -39,32 +49,39 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: Colors.white, // Explicitly set to white
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(showHeaderImage ? 200 : kToolbarHeight), // Reduce height
+        preferredSize: Size.fromHeight(showHeaderImage ? 325 : kToolbarHeight), // Adjust height to include spacer
         child: Stack(
           children: [
             if (showHeaderImage) // Show only when not on HomeScreen
-              SizedBox(
-                width: double.infinity, // Full width
-                height: 300, // Reduce image size to half
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/Header.jpg"),
-                      fit: BoxFit.contain, // Keep full image without cropping
-                      alignment: Alignment.center, // Center the image
+              Column(
+                children: [
+                  SizedBox(height: 50), // Add space above the header image
+                  SizedBox(
+                    width: double.infinity, // Full width
+                    height: 300, // Adjust image height
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/Header.jpg"),
+                          fit: BoxFit.contain, // Keep full image without cropping
+                          alignment: Alignment.center, // Center the image
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             Positioned(
               top: 20, // Adjust as needed
               left: 10, // Keep hamburger at the top left
-              child: Builder(
-                builder: (context) => IconButton(
-                  icon: Icon(Icons.menu, color: Colors.black, size: 60),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
+              child: SafeArea(
+                child: Builder(
+                  builder: (context) => IconButton(
+                    icon: Icon(Icons.menu, color: Colors.black, size: 30), // Adjust size as needed
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  ),
                 ),
               ),
             ),
@@ -104,14 +121,27 @@ class _MainScreenState extends State<MainScreen> {
                 onTap: () => _onItemTapped(4),
               ),
               ListTile(
-                leading: Icon(Icons.check, color: const Color.fromARGB(255, 0, 0, 0)),
+                leading: Icon(Icons.favorite, color: const Color.fromARGB(255, 0, 0, 0)),
                 title: Text("Favoris", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
                 onTap: () => _onItemTapped(5),
               ),
               ListTile(
-                leading: Icon(Icons.favorite, color: const Color.fromARGB(255, 0, 0, 0)),
+                leading: Icon(Icons.handshake, color: const Color.fromARGB(255, 0, 0, 0)),
                 title: Text("Partenaires", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
                 onTap: () => _onItemTapped(6),
+              ),
+              ListTile(
+                leading: Icon(Icons.map, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Plan de salle", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () async {
+                  Navigator.pop(context); // Close the drawer
+                  final url = Uri.parse("https://drive.google.com/file/d/112UnQGMfF4D2dj9Vd5cBNDy14ZYQs6Eg/view");
+                     try {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } catch (e) {
+                      print('Could not launch $url: $e');
+                    }
+                },
               ),
             ],
           ),

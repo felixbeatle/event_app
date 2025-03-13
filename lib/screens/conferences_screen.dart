@@ -20,74 +20,35 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
     _favoriteController.loadFavorites(); // Load favorites
   }
 
-  Future<void> loadConferences() async {
-    try {
-      final data = await ConferenceService().fetchConferences();
-      print("Fetched conferences: $data");
-      
-      // Extract the day of the week from the 'jour' field and separate conferences into two lists
-      final saturdayConferences = data.where((conference) {
-        final jour = (conference['jour'] ?? '').toLowerCase();
-        return jour.contains('samedi');
-      }).toList();
+Future<void> loadConferences() async {
+  try {
+    final data = await ConferenceService().fetchConferences();
+    print("Fetched conferences: $data");
 
-      final sundayConferences = data.where((conference) {
-        final jour = (conference['jour'] ?? '').toLowerCase();
-        return jour.contains('dimanche');
-      }).toList();
+    // Log the conferences to see what is in the 'number' field
+    data.forEach((conference) {
+      print('Conference: ${conference['title']}, Number: ${conference['ordre']}');
+    });
 
-      print("Saturday conferences: $saturdayConferences");
-      print("Sunday conferences: $sundayConferences");
+    // Sort the list by column number
+    data.sort((a, b) {
+      final columnA = double.tryParse((a['ordre'] ?? '0').toString()) ?? 0.0;
+      final columnB = double.tryParse((b['ordre'] ?? '0').toString()) ?? 0.0;
+      return columnA.compareTo(columnB);
+    });
 
-      // Sort each list by hour
-      saturdayConferences.sort((a, b) {
-        final heureA = a['heure'] ?? '';
-        final heureB = b['heure'] ?? '';
-        final hourPartsA = heureA.split('h');
-        final hourPartsB = heureB.split('h');
-        final hourA = int.tryParse(hourPartsA[0]) ?? 0;
-        final hourB = int.tryParse(hourPartsB[0]) ?? 0;
-        final minuteA = hourPartsA.length > 1 ? int.tryParse(hourPartsA[1]) ?? 0 : 0;
-        final minuteB = hourPartsB.length > 1 ? int.tryParse(hourPartsB[1]) ?? 0 : 0;
-
-        if (hourA != hourB) {
-          return hourA.compareTo(hourB);
-        }
-        return minuteA.compareTo(minuteB);
-      });
-
-      sundayConferences.sort((a, b) {
-        final heureA = a['heure'] ?? '';
-        final heureB = b['heure'] ?? '';
-        final hourPartsA = heureA.split('h');
-        final hourPartsB = heureB.split('h');
-        final hourA = int.tryParse(hourPartsA[0]) ?? 0;
-        final hourB = int.tryParse(hourPartsB[0]) ?? 0;
-        final minuteA = hourPartsA.length > 1 ? int.tryParse(hourPartsA[1]) ?? 0 : 0;
-        final minuteB = hourPartsB.length > 1 ? int.tryParse(hourPartsB[1]) ?? 0 : 0;
-
-        if (hourA != hourB) {
-          return hourA.compareTo(hourB);
-        }
-        return minuteA.compareTo(minuteB);
-      });
-
-      // Combine the two lists
-      final sortedConferences = [...saturdayConferences, ...sundayConferences];
-      print("Sorted conferences: $sortedConferences");
-
-      setState(() {
-        conferences = sortedConferences;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-        isLoading = false;
-      });
-      print("Error loading conferences: $e");
-    }
+    setState(() {
+      conferences = data;
+      isLoading = false;
+    });
+  } catch (e) {
+    setState(() {
+      errorMessage = e.toString();
+      isLoading = false;
+    });
+    print("Error loading conferences: $e");
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +59,7 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
           : errorMessage.isNotEmpty
               ? Center(child: Text("Erreur: $errorMessage"))
               : Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(25.0),
                   child: ListView.builder(
                     itemCount: conferences.length + 1, // Add one for the introductory text
                     itemBuilder: (context, index) {
@@ -108,14 +69,25 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Center(child: 
                               Text(
-                                "CONFÉRENCES EN SALLE RESERVÉES AUX DÉTENTEURS DE PASSEPORT VIP",
+                                "CONFÉRENCES EN SALLE",
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
+                              ),
+                              Text("RESERVÉES AUX DÉTENTEURS DE PASSEPORT VIP",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                                textAlign: TextAlign.center,
+                              ), 
                               SizedBox(height: 10),
                               Center(
                                 child: Text(
@@ -183,24 +155,7 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                                         Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                   ),
                                 ),
-                                SizedBox(height: 15),
-                                Center(child: 
-                                 IconButton(
-                                    icon: Icon(
-                                      _favoriteController.isFavorite(title)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: _favoriteController.isFavorite(title)
-                                          ? Colors.red
-                                          : Colors.grey,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _favoriteController.toggleFavorite(title);
-                                      });
-                                    },
-                                  ),
-                                ),
+                                SizedBox(height: 20),
                                 Center(
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(

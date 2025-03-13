@@ -20,48 +20,34 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
     loadActivities();
   }
 
-  Future<void> loadActivities() async {
-    try {
-      await _favoriteController.loadFavorites();
-      final data = await ActivityService().fetchActivities();
-      
-      // Sort activities by day and hours
-      data.sort((a, b) {
-        final dayOrder = {'samedi': 1, 'dimanche': 2};
-        final jourA = a['jour'] ?? '';
-        final jourB = b['jour'] ?? '';
-        final horaireA = a['horaire'] ?? '';
-        final horaireB = b['horaire'] ?? '';
+Future<void> loadActivities() async {
+  try {
+    await _favoriteController.loadFavorites();
+    final data = await ActivityService().fetchActivities();
 
-        // Compare days
-        final dayComparison = (dayOrder[jourA] ?? 3).compareTo(dayOrder[jourB] ?? 3);
-        if (dayComparison != 0) {
-          return dayComparison;
-        }
+    // Log the activities to see what is in the 'number' field
+    data.forEach((activity) {
+      print('Activity: ${activity['title']}, Number: ${activity['number']}');
+    });
 
-        // Compare hours
-        final hourA = int.tryParse(horaireA.split(' ')[0]) ?? 0;
-        final hourB = int.tryParse(horaireB.split(' ')[0]) ?? 0;
-        return hourA.compareTo(hourB);
-      });
+    // Sort the list by column number
+    data.sort((a, b) {
+      final columnA = double.tryParse((a['number'] ?? '0').toString()) ?? 0.0;
+      final columnB = double.tryParse((b['number'] ?? '0').toString()) ?? 0.0;
+      return columnA.compareTo(columnB);
+    });
 
-      setState(() {
-        activities = data;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-        isLoading = false;
-      });
-    }
-  }
-
-  void _toggleFavorite(String title) {
     setState(() {
-      _favoriteController.toggleFavorite(title);
+      activities = data;
+      isLoading = false;
+    });
+  } catch (e) {
+    setState(() {
+      errorMessage = e.toString();
+      isLoading = false;
     });
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +62,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Center(child: 
                       Text(
                         "ACTIVITÉS",
                         style: TextStyle(
@@ -84,14 +71,13 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      ),
+                      SizedBox(height: 15),
                       Expanded(
                         child: ListView.builder(
                           itemCount: activities.length,
                           itemBuilder: (context, index) {
                             final activity = activities[index];
-                            final jour = activity['jour'] ?? 'Jour inconnu';
-                            final horaire = activity['horaire'] ?? 'Horaire inconnu';
                             final emplacement = activity['emplacement'] ?? 'Emplacement inconnu';
                             final url = activity['imageUrlVisible'] ?? '';
                             final title = activity['title'] ?? 'Titre inconnu';
@@ -103,29 +89,6 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Center(
-                                        child: Text(
-                                          jour,
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            color: const Color.fromARGB(255, 0, 0, 0),
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Text(
-                                          horaire,
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            color: const Color.fromARGB(255, 0, 0, 0),
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                      
-                                    
                                       Padding(
                                         padding: const EdgeInsets.all(20.0),
                                         child: Container(
@@ -151,41 +114,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                             color: const Color.fromARGB(255, 0, 0, 0),
                                             fontWeight: FontWeight.bold,
                                           ),
+                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                       SizedBox(height: 10),
-                                      Center(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 2),
-                                          decoration: BoxDecoration(
-                                            color: Color.fromARGB(255, 255, 227, 85), // Color #fcd307 with 0.5 opacity
-                                            borderRadius: BorderRadius.circular(5),
-                                          ),
-                                          child: Text(
-                                            "Kiosque: $emplacement",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 10),
-                                       Center(
-                                        child: IconButton(
-                                          icon: Icon(
-                                            _favoriteController.isFavorite(title)
-                                                ? Icons.favorite
-                                                : Icons.favorite_border,
-                                            color: _favoriteController.isFavorite(title)
-                                                ? Colors.red
-                                                : Colors.grey,
-                                          ),
-                                          onPressed: () {
-                                            _toggleFavorite(title);
-                                          },
-                                        ),
-                                      ),
                                       Center(
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(

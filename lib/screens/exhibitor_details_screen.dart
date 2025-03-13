@@ -38,7 +38,7 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
     final partenaireText = partenaire.replaceAll('[', '').replaceAll(']', '');
     final siteInternetDeLEntreprise = widget.exhibitor['siteInternetDeLEntreprise'] ?? '';
     final urlPub = widget.exhibitor['urlPub'] ?? '';
-    final urlImagePub = widget.exhibitor['imagePublicitaire'] ?? '';
+    final urlImagePub = widget.exhibitor['imagePubVisible'] ?? '';
 
     if (!isFavoritesLoaded) {
       return Scaffold(
@@ -46,22 +46,33 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
+    bool isFavorite = _favoriteController.isFavorite(entreprise);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(250), // Adjust height as needed
+        preferredSize: Size.fromHeight(325), // Adjust height as needed
         child: Stack(
           children: [
-            SizedBox(
-              width: double.infinity,
-              height: 300,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/Header.jpg"),
-                    fit: BoxFit.contain,
-                    alignment: Alignment.center,
+            Positioned(
+              top: 0,
+              child: SizedBox(
+                height: 50, // Add space above the header image
+                width: double.infinity,
+              ),
+            ),
+            Positioned(
+              top: 50, // Adjust the position of the image
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 300,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/Header.jpg"),
+                      fit: BoxFit.contain,
+                      alignment: Alignment.center,
+                    ),
                   ),
                 ),
               ),
@@ -69,8 +80,8 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
             Positioned(
               top: 30,
               left: 10,
-              child: Builder(
-                builder: (context) => IconButton(
+              child: SafeArea(
+                child: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black, size: 32),
                   onPressed: () {
                     Navigator.pop(context);
@@ -82,19 +93,21 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(25.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              "EXPOSANTS ET PARTENAIRES",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            Center(
+              child: Text(
+                "EXPOSANTS ET PARTENAIRES",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 30),
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -113,10 +126,8 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
-
-            // Partenaire
-            if (partenaireText.isNotEmpty)
+            if (partenaireText.isNotEmpty) ...[
+              SizedBox(height: 10),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -126,21 +137,19 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                   ),
                 ),
               ),
+            ],
             SizedBox(height: 10),
-
-            // Entreprise
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Text(
                   entreprise,
                   style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
             SizedBox(height: 10),
-
-            // Kiosque
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -161,26 +170,24 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
               ),
             ),
             SizedBox(height: 10),
-
-            // Favorite Icon
             IconButton(
-              icon: Icon(
-                _favoriteController.isFavorite(entreprise)
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                color: _favoriteController.isFavorite(entreprise)
-                    ? Colors.red
-                    : Colors.grey,
-              ),
-              onPressed: () {
-                setState(() {
-                  _favoriteController.toggleFavorite(entreprise);
-                });
-              },
-            ),
-
-            // Description
-            if (description.isNotEmpty)
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? Colors.red : Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _favoriteController.toggleFavorite(entreprise);
+                      });
+                    },
+                  ),
+                  if (!isFavorite)
+                    Text(
+                      "Ajouter au favoris",
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+            SizedBox(height: 20),
+            if (description.isNotEmpty) ...[
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -191,37 +198,35 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                   ),
                 ),
               ),
-            SizedBox(height: 25),
-
-            // Image Pub
-            if (partenaire.isNotEmpty)
+              SizedBox(height: 25),
+            ],
+            if (partenaire.isNotEmpty) ...[
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: GestureDetector(
                     onTap: () async {
                       final url = Uri.parse(urlPub);
-                      print('Attempting to launch URL: $url');
-                      if (await canLaunchUrl(url)) {
-                        print('Launching URL: $url');
-                        await launchUrl(url, mode: LaunchMode.externalApplication);
-                      } else {
-                        print('Could not launch URL: $url');
-                        throw 'Could not launch $url';
-                      }
+                       try {
+                          await launchUrl(url, mode: LaunchMode.externalApplication);
+                        } catch (e) {
+                          print('Could not launch $url: $e');
+                        }
                     },
-                    child: Image.network(
-                      urlImagePub,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
-                    ),
+                    child: urlImagePub.isNotEmpty
+                        ? Image.network(
+                            urlImagePub,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(), // Return an empty container if there's an error
+                          )
+                        : Container(), // Return an empty container if urlImagePub is empty
                   ),
                 ),
               ),
-              SizedBox(height: 30),
-
-            if (siteInternetDeLEntreprise.isNotEmpty)
+              SizedBox(height: 10),
+            ],
+            if (siteInternetDeLEntreprise.isNotEmpty) ...[
               Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -233,13 +238,10 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                   ),
                   onPressed: () async {
                     final url = Uri.parse(siteInternetDeLEntreprise);
-                    print('Attempting to launch URL: $url');
-                    if (await canLaunchUrl(url)) {
-                      print('Launching URL: $url');
-                      await launchUrl(url, mode: LaunchMode.externalApplication);
-                    } else {
-                      print('Could not launch URL: $url');
-                      throw 'Could not launch $url';
+                     try {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } catch (e) {
+                      print('Could not launch $url: $e');
                     }
                   },
                   child: Text(
@@ -248,7 +250,8 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                   ),
                 ),
               ),
-            SizedBox(height: 10),
+              SizedBox(height: 40),
+            ],
           ],
         ),
       ),

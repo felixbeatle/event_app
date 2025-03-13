@@ -27,37 +27,37 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
     _favoriteController.loadFavorites(); // Load favorites
   }
 
-  Future<void> loadExhibitors() async {
-    try {
-      final data = await ExhibitorService().fetchExhibitors();
-      
-      // Log total number of exhibitors received
-      print("🔹 Total exhibitors received: ${data.length}");
+Future<void> loadExhibitors() async {
+  try {
+    final data = await ExhibitorService().fetchExhibitors();
+    
+    // Log total number of exhibitors received
+    print("🔹 Total exhibitors received: ${data.length}");
 
-      // Log first few exhibitors to verify structure
-      if (data.isNotEmpty) {
-        print("🔹 First exhibitor sample: ${data.sublist(0, data.length > 3 ? 3 : data.length)}");
-      }
-
-      // Sort exhibitors by the 'entreprise' field
-      data.sort((a, b) {
-        final entrepriseA = (a['entreprise'] ?? '').toString().toLowerCase();
-        final entrepriseB = (b['entreprise'] ?? '').toString().toLowerCase();
-        return entrepriseA.compareTo(entrepriseB);
-      });
-
-      setState(() {
-        exhibitors = data;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-        isLoading = false;
-      });
-      print("❌ Error loading exhibitors: $e");
+    // Log first few exhibitors to verify structure
+    if (data.isNotEmpty) {
+      print("🔹 First exhibitor sample: ${data.sublist(0, data.length > 3 ? 3 : data.length)}");
     }
+
+    // Sort exhibitors by the 'number' field
+    data.sort((a, b) {
+      final columnA = double.tryParse((a['ordre'] ?? '0').toString()) ?? 0.0;
+      final columnB = double.tryParse((b['ordre'] ?? '0').toString()) ?? 0.0;
+      return columnA.compareTo(columnB);
+    });
+
+    setState(() {
+      exhibitors = data;
+      isLoading = false;
+    });
+  } catch (e) {
+    setState(() {
+      errorMessage = e.toString();
+      isLoading = false;
+    });
+    print("❌ Error loading exhibitors: $e");
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -70,21 +70,23 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
           : errorMessage.isNotEmpty
               ? Center(child: Text("Erreur: $errorMessage"))
               : Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(25.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
+                        child: Center(child:Text(
                         "EXPOSANT ET PARTENAIRES",
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
+                            ),
+                          ),
                         ),
                       ),
-                      ),
+                      SizedBox(height: 30),
                       Expanded(
                         child: ListView.builder(
                           itemCount: exhibitors.length,
@@ -92,7 +94,6 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                             final exhibitor = exhibitors[index];
                             
                             final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
-                            final kiosque = exhibitor['kiosque'] ?? 'N/A';
                             final logoUrl = exhibitor['urlImagePublique'] ?? testLogoUrl; // Use the actual logo URL or fallback to test URL
                             final partenaire = exhibitor['partenariat'] ?? '';
 
@@ -156,37 +157,6 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                                           ),
                                         ),
                                       ),
-                                  SizedBox(height: 5),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 252, 237, 24), // Color #fcd307 with 0.5 opacity
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      "Kiosque: $kiosque",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  IconButton(
-                                    icon: Icon(
-                                      _favoriteController.isFavorite(entreprise)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: _favoriteController.isFavorite(entreprise)
-                                          ? Colors.red
-                                          : Colors.grey,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _favoriteController.toggleFavorite(entreprise);
-                                      });
-                                    },
-                                  ),
                                 ],
                               ),
                             );
