@@ -34,8 +34,7 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
     final kiosque = widget.exhibitor['kiosque'] ?? 'N/A';
     final logoUrl = widget.exhibitor['urlImagePublique'] ?? '';
     final partenaire = widget.exhibitor['partenariat'] ?? '';
-    final description = widget.exhibitor['partenaireSeulementDescription']?.replaceAll(RegExp(r'<[^>]*>'), '').replaceAll('&nbsp;', ' ') ?? '';
-    final partenaireText = partenaire.replaceAll('[', '').replaceAll(']', '');
+    final description = widget.exhibitor['partenaireSeulementDescription']?? '';
     final siteInternetDeLEntreprise = widget.exhibitor['siteInternetDeLEntreprise'] ?? '';
     final urlPub = widget.exhibitor['urlPub'] ?? '';
     final urlImagePub = widget.exhibitor['imagePubVisible'] ?? '';
@@ -126,13 +125,13 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                 ),
               ),
             ),
-            if (partenaireText.isNotEmpty) ...[
+            if (partenaire.isNotEmpty) ...[
               SizedBox(height: 10),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(
-                    partenaireText,
+                    partenaire,
                     style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                 ),

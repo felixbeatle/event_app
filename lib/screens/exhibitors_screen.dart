@@ -97,9 +97,7 @@ Future<void> loadExhibitors() async {
                             final logoUrl = exhibitor['urlImagePublique'] ?? testLogoUrl; // Use the actual logo URL or fallback to test URL
                             final partenaire = exhibitor['partenariat'] ?? '';
 
-                            // Remove '[' and ']' from the partenariat text
-                            final partenaireText = partenaire.replaceAll('[', '').replaceAll(']', '');
-
+                     
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 15.0),
                               child: Column(
@@ -146,13 +144,13 @@ Future<void> loadExhibitors() async {
                                       ),
                                     ),
                                   ),
-                                  if (partenaireText.isNotEmpty)
+                                  if (partenaire.isNotEmpty)
                                       Positioned(
                                         top: 10,
                                         child: Container(
                                           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                                           child: Text(
-                                            partenaireText,
+                                            partenaire,
                                             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                                           ),
                                         ),
