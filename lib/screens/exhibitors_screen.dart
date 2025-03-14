@@ -83,6 +83,7 @@ Future<void> loadExhibitors() async {
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                             ),
+                          textAlign: TextAlign.center,
                           ),
                         ),
                       ),
