@@ -108,264 +108,283 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : errorMessage.isNotEmpty
               ? Center(child: Text("Erreur: $errorMessage"))
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    SizedBox(height: 25),
-                      Center(
-                        child: Center(child:
-                        Text(
-                          "Bienvenue dans votre liste de favoris!",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+              : Padding(
+                  padding: const EdgeInsets.only(top: 0.0), // Add 50px padding from the top
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity, // Full width
+                              height: 300, // Adjust image height
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("assets/images/Header.jpg"),
+                                    fit: BoxFit.contain, // Keep full image without cropping
+                                    alignment: Alignment.center, // Center the image
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Center(
+                          child: Text(
+                            "Bienvenue dans votre liste de favoris!",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                      ),),
-                      SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                        child: Text(
-                          "Personnalisez votre expérience au Salon de l’apprentissage en un clin d'œil! Ajoutez vos exposants, conférences et activités préférés en un simple clic sur le cœur à côté de leur nom. C’est rapide, facile et vous garantit de ne rien manquer et de profiter au maximum de votre visite!",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                          child: Text(
+                            "Personnalisez votre expérience au Salon de l’apprentissage en un clin d'œil! Ajoutez vos exposants, conférences et activités préférés en un simple clic sur le cœur à côté de leur nom. C’est rapide, facile et vous garantit de ne rien manquer et de profiter au maximum de votre visite!",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.justify,
                           ),
-                          textAlign: TextAlign.justify,
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      ListView(
-                        shrinkWrap: true, // Ensure the ListView takes only the necessary space
-                        physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
-                        children: [
-                          ...exhibitors.map((exhibitor) {
-                            final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
-                            final logoUrl = exhibitor['urlImagePublique'] ?? '';
+                        SizedBox(height: 20),
+                        ListView(
+                          shrinkWrap: true, // Ensure the ListView takes only the necessary space
+                          physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
+                          children: [
+                            ...exhibitors.map((exhibitor) {
+                              final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
+                              final logoUrl = exhibitor['urlImagePublique'] ?? '';
 
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                                  child: Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
                                               ),
-                                              child: Image.network(
-                                                logoUrl,
-                                                width: double.infinity,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (context, error, stackTrace) =>
-                                                    Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                              child: Text(
-                                                entreprise,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
+                                            );
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                                                 ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                _favoriteController.isFavorite(entreprise)
-                                                    ? Icons.favorite
-                                                    : Icons.favorite_border,
-                                                color: _favoriteController.isFavorite(entreprise)
-                                                    ? Colors.red
-                                                    : Colors.grey,
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _favoriteController.toggleFavorite(entreprise);
-                                                  loadExhibitors(); // Refresh the list
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Divider(), // Add a divider between each item
-                              ],
-                            );
-                          }).toList(),
-                          ...activities.map((activity) {
-                            final title = activity['title'] ?? 'Titre inconnu';
-                            final url = activity['imageUrlVisible'] ?? '';
-
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                                  child: Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ActivityDetailsScreen(activity: activity),
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
-                                              ),
-                                              child: Image.network(
-                                                url,
-                                                width: double.infinity,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (context, error, stackTrace) =>
-                                                    Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                              child: Text(
-                                                title,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
+                                                child: Image.network(
+                                                  logoUrl,
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error, stackTrace) =>
+                                                      Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                                 ),
-                                                textAlign: TextAlign.center,
                                               ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                _favoriteController.isFavorite(title)
-                                                    ? Icons.favorite
-                                                    : Icons.favorite_border,
-                                                color: _favoriteController.isFavorite(title)
-                                                    ? Colors.red
-                                                    : Colors.grey,
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _favoriteController.toggleFavorite(title);
-                                                  loadActivities(); // Refresh the list
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Divider(), // Add a divider between each item
-                              ],
-                            );
-                          }).toList(),
-                          ...conferences.map((conference) {
-                            final title = conference['title'] ?? 'Titre inconnu';
-                            final url = conference['url'] ?? '';
-
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                                  child: Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ConferenceDetailsScreen(conference: conference),
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
-                                              ),
-                                              child: Image.network(
-                                                url,
-                                                width: double.infinity,
-
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (context, error, stackTrace) =>
-                                                    Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                              child: Text(
-                                                title,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
+                                              SizedBox(height: 10),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Text(
+                                                  entreprise,
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                textAlign: TextAlign.center,
                                               ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                _favoriteController.isFavorite(title)
-                                                    ? Icons.favorite
-                                                    : Icons.favorite_border,
-                                                color: _favoriteController.isFavorite(title)
-                                                    ? Colors.red
-                                                    : Colors.grey,
+                                              IconButton(
+                                                icon: Icon(
+                                                  _favoriteController.isFavorite(entreprise)
+                                                      ? Icons.favorite
+                                                      : Icons.favorite_border,
+                                                  color: _favoriteController.isFavorite(entreprise)
+                                                      ? Colors.red
+                                                      : Colors.grey,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _favoriteController.toggleFavorite(entreprise);
+                                                    loadExhibitors(); // Refresh the list
+                                                  });
+                                                },
                                               ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _favoriteController.toggleFavorite(title);
-                                                  loadConferences(); // Refresh the list
-                                                });
-                                              },
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Divider(), // Add a divider between each item
-                              ],
-                            );
-                          }).toList(),
-                        ],
-                      ),
-                    ],
+                                  Divider(), // Add a divider between each item
+                                ],
+                              );
+                            }).toList(),
+                            ...activities.map((activity) {
+                              final title = activity['title'] ?? 'Titre inconnu';
+                              final url = activity['imageUrlVisible'] ?? '';
+
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ActivityDetailsScreen(activity: activity),
+                                              ),
+                                            );
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
+                                                ),
+                                                child: Image.network(
+                                                  url,
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error, stackTrace) =>
+                                                      Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                                ),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Text(
+                                                  title,
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  _favoriteController.isFavorite(title)
+                                                      ? Icons.favorite
+                                                      : Icons.favorite_border,
+                                                  color: _favoriteController.isFavorite(title)
+                                                      ? Colors.red
+                                                      : Colors.grey,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _favoriteController.toggleFavorite(title);
+                                                    loadActivities(); // Refresh the list
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(), // Add a divider between each item
+                                ],
+                              );
+                            }).toList(),
+                            ...conferences.map((conference) {
+                              final title = conference['title'] ?? 'Titre inconnu';
+                              final url = conference['url'] ?? '';
+
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ConferenceDetailsScreen(conference: conference),
+                                              ),
+                                            );
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
+                                                ),
+                                                child: Image.network(
+                                                  url,
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error, stackTrace) =>
+                                                      Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                                ),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Text(
+                                                  title,
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  _favoriteController.isFavorite(title)
+                                                      ? Icons.favorite
+                                                      : Icons.favorite_border,
+                                                  color: _favoriteController.isFavorite(title)
+                                                      ? Colors.red
+                                                      : Colors.grey,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _favoriteController.toggleFavorite(title);
+                                                    loadConferences(); // Refresh the list
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(), // Add a divider between each item
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
     );

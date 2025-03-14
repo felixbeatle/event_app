@@ -15,9 +15,7 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
   List<dynamic> exhibitors = [];
   bool isLoading = true;
   String errorMessage = '';
-  static const String testLogoUrl =
-      "https://static.wixstatic.com/media/0025ee_725045c7d09d4de58fc9bf7cac135334~mv2.jpg/v1/fill/w_1080,h_1080,al_c,q_85,enc_auto/Troubadour%20-%20Logo.jpg";
-
+ 
   final FavoriteController _favoriteController = FavoriteController(); // Initialize the FavoriteController
 
   @override
@@ -27,37 +25,28 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
     _favoriteController.loadFavorites(); // Load favorites
   }
 
-Future<void> loadExhibitors() async {
-  try {
-    final data = await ExhibitorService().fetchExhibitors();
-    
-    // Log total number of exhibitors received
-    print("🔹 Total exhibitors received: ${data.length}");
+  Future<void> loadExhibitors() async {
+    try {
+      final data = await ExhibitorService().fetchExhibitors();
+      
+      // Sort exhibitors by the 'number' field
+      data.sort((a, b) {
+        final columnA = double.tryParse((a['ordre'] ?? '0').toString()) ?? 0.0;
+        final columnB = double.tryParse((b['ordre'] ?? '0').toString()) ?? 0.0;
+        return columnA.compareTo(columnB);
+      });
 
-    // Log first few exhibitors to verify structure
-    if (data.isNotEmpty) {
-      print("🔹 First exhibitor sample: ${data.sublist(0, data.length > 3 ? 3 : data.length)}");
+      setState(() {
+        exhibitors = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+        isLoading = false;
+      });
     }
-
-    // Sort exhibitors by the 'number' field
-    data.sort((a, b) {
-      final columnA = double.tryParse((a['ordre'] ?? '0').toString()) ?? 0.0;
-      final columnB = double.tryParse((b['ordre'] ?? '0').toString()) ?? 0.0;
-      return columnA.compareTo(columnB);
-    });
-
-    setState(() {
-      exhibitors = data;
-      isLoading = false;
-    });
-  } catch (e) {
-    setState(() {
-      errorMessage = e.toString();
-      isLoading = false;
-    });
-    print("❌ Error loading exhibitors: $e");
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -70,51 +59,70 @@ Future<void> loadExhibitors() async {
           : errorMessage.isNotEmpty
               ? Center(child: Text("Erreur: $errorMessage"))
               : Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Center(child:Text(
-                        "EXPOSANT ET PARTENAIRES",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                  padding: const EdgeInsets.only(top: 0.0), // Add 50px padding from the top
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity, // Full width
+                              height: 300, // Adjust image height
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("assets/images/Header.jpg"),
+                                    fit: BoxFit.contain, // Keep full image without cropping
+                                    alignment: Alignment.center, // Center the image
+                                  ),
+                                ),
+                              ),
                             ),
-                          textAlign: TextAlign.center,
+                          ],
+                        ),
+                        Center(
+                          child: Text(
+                            "EXPOSANT ET PARTENAIRES",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                      ),
-                      SizedBox(height: 30),
-                      Expanded(
-                        child: ListView.builder(
+                        SizedBox(height: 30),
+                        ListView.builder(
+                          shrinkWrap: true, // Ensure the ListView takes only the necessary space
+                          physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
                           itemCount: exhibitors.length,
                           itemBuilder: (context, index) {
                             final exhibitor = exhibitors[index];
                             
                             final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
-                            final logoUrl = exhibitor['urlImagePublique'] ?? testLogoUrl; // Use the actual logo URL or fallback to test URL
+                            final logoUrl = exhibitor['urlImagePublique'] ?? ''; // Use the actual logo URL or fallback to test URL
                             final partenaire = exhibitor['partenariat'] ?? '';
 
-                     
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 15.0),
-                              child: Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
-                                        ),
-                                      );
-                                    },
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
+                                            ),
+                                          );
+                                        },
+                                        child: 
+                                        Center(child: 
                                         Container(
                                           decoration: BoxDecoration(
                                             border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
@@ -128,41 +136,39 @@ Future<void> loadExhibitors() async {
                                                 Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                                    alignment: Alignment.center, // Center the text
-                                    child: Center(
-                                      child: Text(
-                                        entreprise,
-                                        textAlign: TextAlign.center, // Center the text within the Text widget
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                        softWrap: true, // Ensure text wraps on whole words
-                                        overflow: TextOverflow.visible, // Handle overflow gracefully
                                       ),
-                                    ),
-                                  ),
-                                  if (partenaire.isNotEmpty)
-                                      Positioned(
-                                        top: 10,
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                                        alignment: Alignment.center, // Center the text
+                                        child: Center(
                                           child: Text(
-                                            partenaire,
-                                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                            entreprise,
+                                            textAlign: TextAlign.center, // Center the text within the Text widget
+                                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                            softWrap: true, // Ensure text wraps on whole words
+                                            overflow: TextOverflow.visible, // Handle overflow gracefully
                                           ),
                                         ),
                                       ),
-                                ],
-                              ),
+                                      if (partenaire.isNotEmpty)...[
+                                         Center(child: 
+                                            Text(
+                                                  partenaire,
+                                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                                ),
+                                          ),
+                                      ]
+                                    ],
+                                  ),
+                                ),
+                              ],
                             );
                           },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
     );

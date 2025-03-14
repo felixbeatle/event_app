@@ -44,49 +44,12 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool showHeaderImage = _selectedIndex != 0; // Hide image on HomeScreen
-
     return Scaffold(
       backgroundColor: Colors.white, // Explicitly set to white
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(showHeaderImage ? 325 : kToolbarHeight), // Adjust height to include spacer
-        child: Stack(
-          children: [
-            if (showHeaderImage) // Show only when not on HomeScreen
-              Column(
-                children: [
-                  SizedBox(height: 50), // Add space above the header image
-                  SizedBox(
-                    width: double.infinity, // Full width
-                    height: 300, // Adjust image height
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/images/Header.jpg"),
-                          fit: BoxFit.contain, // Keep full image without cropping
-                          alignment: Alignment.center, // Center the image
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            Positioned(
-              top: 20, // Adjust as needed
-              left: 10, // Keep hamburger at the top left
-              child: SafeArea(
-                child: Builder(
-                  builder: (context) => IconButton(
-                    icon: Icon(Icons.menu, color: Colors.black, size: 30), // Adjust size as needed
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black, size: 50), // Adjust the size of the hamburger icon
       ),
       drawer: Drawer(
         child: Container(
@@ -136,11 +99,11 @@ class _MainScreenState extends State<MainScreen> {
                 onTap: () async {
                   Navigator.pop(context); // Close the drawer
                   final url = Uri.parse("https://drive.google.com/file/d/112UnQGMfF4D2dj9Vd5cBNDy14ZYQs6Eg/view");
-                     try {
+                  try {
                     await launchUrl(url, mode: LaunchMode.externalApplication);
-                    } catch (e) {
-                      print('Could not launch $url: $e');
-                    }
+                  } catch (e) {
+                    print('Could not launch $url: $e');
+                  }
                 },
               ),
             ],

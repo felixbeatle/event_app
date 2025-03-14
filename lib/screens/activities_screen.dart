@@ -20,34 +20,34 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
     loadActivities();
   }
 
-Future<void> loadActivities() async {
-  try {
-    await _favoriteController.loadFavorites();
-    final data = await ActivityService().fetchActivities();
+  Future<void> loadActivities() async {
+    try {
+      await _favoriteController.loadFavorites();
+      final data = await ActivityService().fetchActivities();
 
-    // Log the activities to see what is in the 'number' field
-    data.forEach((activity) {
-      print('Activity: ${activity['title']}, Number: ${activity['number']}');
-    });
+      // Log the activities to see what is in the 'number' field
+      data.forEach((activity) {
+        print('Activity: ${activity['title']}, Number: ${activity['number']}');
+      });
 
-    // Sort the list by column number
-    data.sort((a, b) {
-      final columnA = double.tryParse((a['number'] ?? '0').toString()) ?? 0.0;
-      final columnB = double.tryParse((b['number'] ?? '0').toString()) ?? 0.0;
-      return columnA.compareTo(columnB);
-    });
+      // Sort the list by column number
+      data.sort((a, b) {
+        final columnA = double.tryParse((a['number'] ?? '0').toString()) ?? 0.0;
+        final columnB = double.tryParse((b['number'] ?? '0').toString()) ?? 0.0;
+        return columnA.compareTo(columnB);
+      });
 
-    setState(() {
-      activities = data;
-      isLoading = false;
-    });
-  } catch (e) {
-    setState(() {
-      errorMessage = e.toString();
-      isLoading = false;
-    });
+      setState(() {
+        activities = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+        isLoading = false;
+      });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -58,27 +58,55 @@ Future<void> loadActivities() async {
           : errorMessage.isNotEmpty
               ? Center(child: Text("Erreur: $errorMessage"))
               : Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(child: 
-                      Text(
-                        "ACTIVITÉS",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                  padding: const EdgeInsets.only(top: 0), // Add 50px padding from the top
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity, // Full width
+                              height: 300, // Adjust image height
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("assets/images/Header.jpg"),
+                                    fit: BoxFit.contain, // Keep full image without cropping
+                                    alignment: Alignment.center, // Center the image
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      ),
-                      SizedBox(height: 15),
-                      Expanded(
-                        child: ListView.builder(
+                        Center(
+                          child: Text(
+                            "ACTIVITÉS",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          "Nous sommes heureux de vous présenter les activités du Salon de l'apprentissage, des événements qui partagent nos objectifs, notre mission et qui s'impliquent activement dans leur milieu pour faire rayonner les valeurs entourant la réussite éducative et le bien-être des jeunes.",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                          textAlign: TextAlign.justify,
+                        ),
+                        SizedBox(height: 20),
+                        ListView.builder(
+                          shrinkWrap: true, // Ensure the ListView takes only the necessary space
+                          physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
                           itemCount: activities.length,
                           itemBuilder: (context, index) {
                             final activity = activities[index];
-                            final emplacement = activity['emplacement'] ?? 'Emplacement inconnu';
                             final url = activity['imageUrlVisible'] ?? '';
                             final title = activity['title'] ?? 'Titre inconnu';
 
@@ -90,7 +118,7 @@ Future<void> loadActivities() async {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.all(20.0),
+                                        padding: const EdgeInsets.all(25.0),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
@@ -155,8 +183,8 @@ Future<void> loadActivities() async {
                             );
                           },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
     );
