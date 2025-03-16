@@ -11,7 +11,7 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
   List<dynamic> exhibitors = [];
   bool isLoading = true;
   String errorMessage = '';
-  
+
   @override
   void initState() {
     super.initState();
@@ -24,6 +24,9 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
 
       // Filter exhibitors to only include partners
       final partners = data.where((exhibitor) => exhibitor['partenariat'] != null && exhibitor['partenariat'].isNotEmpty).toList();
+
+      // Sort partners by ordrepartenaire
+      partners.sort((a, b) => (a['ordrepartenaire'] ?? 0).compareTo(b['ordrepartenaire'] ?? 0));
 
       setState(() {
         exhibitors = partners;
@@ -39,7 +42,6 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white, // Explicitly set to white
       body: isLoading
@@ -87,7 +89,7 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                           itemCount: exhibitors.length,
                           itemBuilder: (context, index) {
                             final exhibitor = exhibitors[index];
-                            
+
                             final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
                             final logoUrl = exhibitor['urlImagePublique'] ?? ''; // Use the actual logo URL or fallback to test URL
                             final partenaire = exhibitor['partenariat'] ?? '';
@@ -99,30 +101,30 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Center(child: 
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
+                                      Center(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                                             ),
-                                          );
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
-                                          ),
-                                          child: Image.network(
-                                            logoUrl, // Use the actual logo URL
-                                            width: MediaQuery.of(context).size.width / 1.5,
-                                            height: MediaQuery.of(context).size.width / 1.5,
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (context, error, stackTrace) =>
-                                                Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                            child: Image.network(
+                                              logoUrl, // Use the actual logo URL
+                                              width: MediaQuery.of(context).size.width / 1.5,
+                                              height: MediaQuery.of(context).size.width / 1.5,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) =>
+                                                  Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                            ),
                                           ),
                                         ),
-                                      ),
                                       ),
                                       SizedBox(height: 10),
                                       Container(
@@ -139,15 +141,15 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                                         ),
                                       ),
                                       if (partenaire.isNotEmpty)
-                                      Center(child:
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                                          child: Text(
-                                            partenaire,
-                                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                        Center(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                            child: Text(
+                                              partenaire,
+                                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                         ),
-                                      ),
                                       SizedBox(height: 5),
                                     ],
                                   ),
