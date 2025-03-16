@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:event_app/services/conference_service.dart';
+import 'conference_details.dart';
 
 class AmbassadorDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> ambassador;
@@ -12,7 +14,8 @@ class AmbassadorDetailsScreen extends StatelessWidget {
     final photoUrl = ambassador['photoambassadeur'] ?? '';
     final description = ambassador['texteAmbassadeur'] ?? 'Aucune description disponible';
     final note = ambassador['note'] ?? '';
-    final detailsUrl = ambassador['dtailsConfrences'] ?? '';
+    final titleConference1 = ambassador['CONFERENCETITLE'] ?? '';
+    final titleConference2 = ambassador['conferencetitle2'] ?? '';
     final fonction = ambassador['fonction'] ?? '';
     final logo = ambassador['logo'] ?? '';
     final logolink = ambassador['url'] ?? '';
@@ -118,7 +121,7 @@ class AmbassadorDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ],
-              if (detailsUrl.isNotEmpty) ...[
+              if (titleConference1.isNotEmpty) ...[
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
@@ -130,15 +133,62 @@ class AmbassadorDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () async {
-                      final url = Uri.parse(detailsUrl);
                       try {
-                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                        final conference = await ConferenceService().fetchConferenceByTitle(titleConference1);
+                        if (conference != null) {
+                          print('Fetched Conference 1: $conference');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ConferenceDetailsScreen(conference: conference),
+                            ),
+                          );
+                        } else {
+                          print('Conference not found');
+                        }
                       } catch (e) {
-                        print('Could not launch $url: $e');
+                        print('Error fetching conference: $e');
                       }
                     },
                     child: Text(
-                      "Voir la Conférence",
+                      titleConference2.isNotEmpty ? "VOIR LA CONFÉRENCE DU SAMEDI" : "VOIR LA CONFÉRENCE",
+                      style: TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+              if (titleConference2.isNotEmpty) ...[
+                SizedBox(height: 10),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black, // Black background
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1), // Button size
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0), // Rectangular shape
+                      ),
+                    ),
+                    onPressed: () async {
+                      try {
+                        print('titleConference2: $titleConference2');
+                        final conference = await ConferenceService().fetchConferenceByTitle(titleConference2);
+                        if (conference != null) {
+                          print('Fetched Conference 2: $conference');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ConferenceDetailsScreen(conference: conference),
+                            ),
+                          );
+                        } else {
+                          print('Conference not found');
+                        }
+                      } catch (e) {
+                        print('Error fetching conference: $e');
+                      }
+                    },
+                    child: Text(
+                      "VOIR LA CONFÉRENCE DU DIMANCHE",
                       style: TextStyle(fontSize: 12, color: Colors.white),
                     ),
                   ),

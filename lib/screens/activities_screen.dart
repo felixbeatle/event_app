@@ -118,18 +118,20 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.all(25.0),
+                                        padding: const EdgeInsets.all(15.0),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                                           ),
-                                          child: Image.network(
-                                            url,
-                                            width: double.infinity,
-                                            height: 500, // Fixed height
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (context, error, stackTrace) =>
-                                                Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                          child: AspectRatio(
+                                            aspectRatio: 2 / 3, // Adjust the aspect ratio as needed
+                                            child: Image.network(
+                                              url,
+                                              width: double.infinity,
+                                              fit: BoxFit.contain, // Ensure the image is fully visible
+                                              errorBuilder: (context, error, stackTrace) =>
+                                                  Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                            ),
                                           ),
                                         ),
                                       ),

@@ -22,8 +22,8 @@ class _MainScreenState extends State<MainScreen> {
     ExhibitorsScreen(),
     ActivitiesScreen(),
     ConferencesScreen(),
-    FavoriteScreen(), // Add FavoriteScreen here
     ContributorsScreen(), // Add ContributorsScreen here
+    FavoriteScreen(), // Add FavoriteScreen here
   ];
 
   void _onItemTapped(int index) {
@@ -83,15 +83,11 @@ class _MainScreenState extends State<MainScreen> {
                 title: Text("Conférences", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
                 onTap: () => _onItemTapped(4),
               ),
-              ListTile(
-                leading: Icon(Icons.favorite, color: const Color.fromARGB(255, 0, 0, 0)),
-                title: Text("Favoris", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
-                onTap: () => _onItemTapped(5),
-              ),
+           
               ListTile(
                 leading: Icon(Icons.handshake, color: const Color.fromARGB(255, 0, 0, 0)),
                 title: Text("Partenaires", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
-                onTap: () => _onItemTapped(6),
+                onTap: () => _onItemTapped(5),
               ),
               ListTile(
                 leading: Icon(Icons.map, color: const Color.fromARGB(255, 0, 0, 0)),
@@ -105,6 +101,24 @@ class _MainScreenState extends State<MainScreen> {
                     print('Could not launch $url: $e');
                   }
                 },
+              ),
+              ListTile(
+                leading: Icon(Icons.my_library_books, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Cahier de programmation", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () async {
+                  Navigator.pop(context); // Close the drawer
+                  final url = Uri.parse("https://drive.google.com/file/d/1uryOPuDiavV_r0hVvZ-YRk9HBFG-EhGP/view");
+                  try {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  } catch (e) {
+                    print('Could not launch $url: $e');
+                  }
+                },
+              ),
+               ListTile(
+                leading: Icon(Icons.favorite, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Favoris", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () => _onItemTapped(6),
               ),
             ],
           ),

@@ -90,7 +90,9 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                 ),
-                child: Image.network(
+                child: AspectRatio(
+                  aspectRatio: 3 / 2, // Adjust the aspect ratio as needed
+                  child: Image.network(
                   url,
                   width: double.infinity,
                   height: 300,
@@ -98,6 +100,8 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
                   errorBuilder: (context, error, stackTrace) =>
                       Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                 ),
+                            ),
+                
               ),
               SizedBox(height: 10),
               Center(

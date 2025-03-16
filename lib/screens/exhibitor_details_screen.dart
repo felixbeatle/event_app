@@ -114,6 +114,31 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                   ),
                 ),
               ),
+              SizedBox(height: 15),
+              if (siteInternetDeLEntreprise.isNotEmpty) ...[
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 177, 177, 177), // Black background
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1), // Button size
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0), // Rectangular shape
+                      ),
+                    ),
+                    onPressed: () async {
+                      final url = Uri.parse(siteInternetDeLEntreprise);
+                      try {
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                      } catch (e) {
+                        print('Could not launch $url: $e');
+                      }
+                    },
+                    child: Text(
+                      "VOIR LE SITE INTERNET",
+                      style: TextStyle(color: Colors.white, fontSize: 12), // White text with font size 16
+                    ),
+                  ),
+                ),              ],
               if (partenaire.isNotEmpty) ...[
                 SizedBox(height: 10),
                 Center(
@@ -132,7 +157,7 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(
                     entreprise,
-                    style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -212,34 +237,9 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
-              ],
-              if (siteInternetDeLEntreprise.isNotEmpty) ...[
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black, // Black background
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1), // Button size
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0), // Rectangular shape
-                      ),
-                    ),
-                    onPressed: () async {
-                      final url = Uri.parse(siteInternetDeLEntreprise);
-                      try {
-                        await launchUrl(url, mode: LaunchMode.externalApplication);
-                      } catch (e) {
-                        print('Could not launch $url: $e');
-                      }
-                    },
-                    child: Text(
-                      "VOIR LE SITE INTERNET",
-                      style: TextStyle(color: Colors.white, fontSize: 12), // White text with font size 16
-                    ),
-                  ),
-                ),
                 SizedBox(height: 40),
               ],
+          
             ],
           ),
         ),
