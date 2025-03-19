@@ -46,6 +46,7 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
 
     final double fontSizeTitle = isTablet ? 32 : 22;
     final double fontSizeSubtitle = isTablet ? 20 : 16;
+    final double subsubtitle = isTablet ? 16 : 12;
     final double paddingValue = isTablet ? 30 : 15;
     final double imageHeight = isTablet ? 500 : 300;
     final double buttonFontSize = isTablet ? 20 : 16;
@@ -91,6 +92,14 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                               color: Colors.black,
                             ),
                           ),
+                        ),
+                        SizedBox(height: 20),
+                        Center(child: 
+                        Text(
+                          "Cliquez sur les logos pour en savoir plus",
+                          style: TextStyle(fontSize: subsubtitle, color: Colors.grey),
+                          textAlign: TextAlign.center,
+                        ),
                         ),
                         SizedBox(height: 25),
                         ListView.builder(

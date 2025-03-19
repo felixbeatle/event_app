@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:event_app/controllers/favorite_controller.dart'; // Import the FavoriteController
+import 'package:event_app/services/exhibitor_service.dart'; // Import the ExhibitorService
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
+import 'exhibitor_details_screen.dart'; // Import the ExhibitorDetailsScreen
 
 class ConferenceDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> conference;
@@ -50,6 +52,8 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
     final nomDuConferencier = widget.conference['nomDuConferencier'] ?? 'Nom inconnu';
     final fonction = widget.conference['fonction'] ?? 'Fonction inconnue';
     final bio = widget.conference['bio'] ?? 'Aucune biographie disponible';
+    final entreprise = widget.conference['entreprise'] ?? '';
+    bool isentreprise = entreprise.isNotEmpty;
 
     if (!isFavoritesLoaded) {
       return Scaffold(
@@ -218,6 +222,40 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            if (isentreprise)
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // Black background
+                    padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical), // Button size
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0), // Rectangular shape
+                    ),
+                  ),
+                  onPressed: () async {
+                    try {
+                      final exhibitor = await ExhibitorService().fetchExhibitorByEntreprise(entreprise);
+                      if (exhibitor != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
+                          ),
+                        );
+                      } else {
+                        print('Exhibitor not found');
+                      }
+                    } catch (e) {
+                      print('Error fetching exhibitor: $e');
+                    }
+                  },
+                  child: Text(
+                    "VOIR L'EXPOSANT",
+                    style: TextStyle(fontSize: buttonFontSize, color: Colors.white), // Text color
+                  ),
+                ),
+              ),
             SizedBox(height: 30),
           ],
         ),

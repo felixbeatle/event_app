@@ -50,6 +50,10 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
     try {
       final images = await _classeDeReveService.fetchClasseDeReveImages();
       print('Fetched Classe de Rêve images: $images'); // Log the fetched images
+
+      // Sort images by the column number
+      images.sort((a, b) => a['number'].compareTo(b['number']));
+
       setState(() {
         classeDeReveImages = images.map<String>((image) => image['urlvisible']).toList();
         isLoadingImages = false;
@@ -61,7 +65,6 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
@@ -80,6 +83,9 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
     final title = widget.activity['title'] ?? 'Titre inconnu';
     final description = widget.activity['description'] ?? 'Aucune description disponible';
     final entreprise = widget.activity['entreprise'] ?? '';
+    final entreprise2 = widget.activity['entreprise2'] ?? '';
+    bool isentreprise2 = entreprise2.isNotEmpty;
+    bool isentreprise = entreprise.isNotEmpty;
 
     bool isFavorite = _favoriteController.isFavorite(title);
 
@@ -127,41 +133,7 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                       Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                 ),
               ),
-            ),
-            SizedBox(height: 10),
-            Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black, // Black background
-                  padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical), // Button size
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0), // Rectangular shape
-                  ),
-                ),
-                onPressed: () async {
-                  try {
-                    final exhibitor = await ExhibitorService().fetchExhibitorByEntreprise(entreprise);
-                    if (exhibitor != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
-                        ),
-                      );
-                    } else {
-                      print('Exhibitor not found');
-                    }
-                  } catch (e) {
-                    print('Error fetching exhibitor: $e');
-                  }
-                },
-                child: Text(
-                  "VOIR L'EXPOSANT",
-                  style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
-                ),
-              ),
-            ),
-            SizedBox(height: 40),
+            ),            SizedBox(height: 40),
             Center(
               child: Text(
                 title,
@@ -224,6 +196,74 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                 textAlign: TextAlign.justify,
               ),
             ),
+            SizedBox(height: 40),
+            if (isentreprise)
+             Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black, // Black background
+                  padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical), // Button size
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0), // Rectangular shape
+                  ),
+                ),
+                onPressed: () async {
+                  try {
+                    final exhibitor = await ExhibitorService().fetchExhibitorByEntreprise(entreprise);
+                    if (exhibitor != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
+                        ),
+                      );
+                    } else {
+                      print('Exhibitor not found');
+                    }
+                  } catch (e) {
+                    print('Error fetching exhibitor: $e');
+                  }
+                },
+                child: Text(
+                  isentreprise2 ? "VOIR LES BOUGEOTTES" : "VOIR L'EXPOSANT",
+                  style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            if (isentreprise2)
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // Black background
+                    padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical), // Button size
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0), // Rectangular shape
+                    ),
+                  ),
+                  onPressed: () async {
+                    try {
+                      final exhibitor = await ExhibitorService().fetchExhibitorByEntreprise(entreprise2);
+                      if (exhibitor != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
+                          ),
+                        );
+                      } else {
+                        print('Exhibitor not found');
+                      }
+                    } catch (e) {
+                      print('Error fetching exhibitor: $e');
+                    }
+                  },
+                  child: Text(
+                  isentreprise2 ? "VOIR LES JOUETS CIBOULOT" : "VOIR L'EXPOSANT",
+                    style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
+                  ),
+                ),
+              ),
             if (classedereve) ...[
               SizedBox(height: 20),
               if (isLoadingImages)

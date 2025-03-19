@@ -7,24 +7,21 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white, // Ensure white background
       body: SafeArea(
-        child: Stack(
-          children: [
-            // Image from URL
-            Positioned.fill(
-              child: Image.asset(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Image at the top
+              Image.asset(
                 "assets/images/Accueil.jpg", // Ensure this path is correct
-                fit: BoxFit.contain, // Cover the available space
+                fit: BoxFit.contain, // Keep full image without cropping
                 errorBuilder: (context, error, stackTrace) {
                   return Center(child: Text('Could not load image'));
                 },
               ),
-            ),
-            // "Inscrivez-vous ici" Button
-            Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: Center(
+              // Spacer to add 50 pixels of space below the image
+              SizedBox(height: 50),
+              // Centered button
+              Center(
                 child: ElevatedButton(
                   onPressed: () async {
                     final url = Uri.parse("https://www.salondelapprentissage.ca/event-details/salon-de-lapprentissage-de-montreal2025");
@@ -47,8 +44,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
