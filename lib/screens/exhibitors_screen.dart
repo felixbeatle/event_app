@@ -16,13 +16,11 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
   bool isLoading = true;
   String errorMessage = '';
  
-  final FavoriteController _favoriteController = FavoriteController(); // Initialize the FavoriteController
 
   @override
   void initState() {
     super.initState();
     loadExhibitors();
-    _favoriteController.loadFavorites(); // Load favorites
   }
 
   Future<void> loadExhibitors() async {
@@ -50,6 +48,16 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
+    final double fontSizeTitle = isTablet ? 32 : 22;
+    final double fontSizeSubtitle = isTablet ? 20 : 16;
+    final double paddingValue = isTablet ? 30 : 15;
+    final double imageHeight = isTablet ? 500 : 300;
+    final double buttonFontSize = isTablet ? 20 : 16;
+    final double buttonPaddingHorizontal = isTablet ? 20 : 10;
+    final double buttonPaddingVertical = isTablet ? 10 : 5;
+
     print("📌 Rendering ListView with ${exhibitors.length} items");
 
     return Scaffold(
@@ -69,7 +77,7 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                           children: [
                             SizedBox(
                               width: double.infinity, // Full width
-                              height: 300, // Adjust image height
+                              height: imageHeight, // Adjust image height
                               child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -84,9 +92,9 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                         ),
                         Center(
                           child: Text(
-                            "EXPOSANT ET PARTENAIRES",
+                            "EXPOSANTS ET PARTENAIRES",
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: fontSizeTitle,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -108,7 +116,7 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                             return Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                  padding: EdgeInsets.symmetric(vertical: paddingValue),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -129,8 +137,8 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                                           ),
                                           child: Image.network(
                                             logoUrl, // Use the actual logo URL
-                                            width: MediaQuery.of(context).size.width / 2,
-                                            height: MediaQuery.of(context).size.width / 2,
+                                            width: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
+                                            height: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
                                             fit: BoxFit.cover,
                                             errorBuilder: (context, error, stackTrace) =>
                                                 Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
@@ -140,13 +148,13 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                                       ),
                                       SizedBox(height: 10),
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                                        padding: EdgeInsets.symmetric(horizontal: paddingValue),
                                         alignment: Alignment.center, // Center the text
                                         child: Center(
                                           child: Text(
                                             entreprise,
                                             textAlign: TextAlign.center, // Center the text within the Text widget
-                                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                            style: TextStyle(fontSize: fontSizeTitle, fontWeight: FontWeight.bold),
                                             softWrap: true, // Ensure text wraps on whole words
                                             overflow: TextOverflow.visible, // Handle overflow gracefully
                                           ),
@@ -156,13 +164,15 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                                          Center(child: 
                                             Text(
                                                   partenaire,
-                                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: fontSizeSubtitle),
                                                 ),
                                           ),
                                       ]
                                     ],
                                   ),
+                                  
                                 ),
+                                SizedBox(height: 50),
                               ],
                             );
                           },

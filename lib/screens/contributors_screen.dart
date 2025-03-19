@@ -42,6 +42,16 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
+    final double fontSizeTitle = isTablet ? 32 : 22;
+    final double fontSizeSubtitle = isTablet ? 20 : 16;
+    final double paddingValue = isTablet ? 30 : 15;
+    final double imageHeight = isTablet ? 500 : 300;
+    final double buttonFontSize = isTablet ? 20 : 16;
+    final double buttonPaddingHorizontal = isTablet ? 20 : 10;
+    final double buttonPaddingVertical = isTablet ? 10 : 5;
+
     return Scaffold(
       backgroundColor: Colors.white, // Explicitly set to white
       body: isLoading
@@ -59,7 +69,7 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                           children: [
                             SizedBox(
                               width: double.infinity, // Full width
-                              height: 300, // Adjust image height
+                              height: imageHeight, // Adjust image height
                               child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -76,7 +86,7 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                           child: Text(
                             "PARTENAIRES",
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: fontSizeTitle,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -97,7 +107,7 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                             return Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                  padding: EdgeInsets.symmetric(vertical: paddingValue),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -117,8 +127,8 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                                             ),
                                             child: Image.network(
                                               logoUrl, // Use the actual logo URL
-                                              width: MediaQuery.of(context).size.width / 1.5,
-                                              height: MediaQuery.of(context).size.width / 1.5,
+                                              width: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
+                                              height: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
                                               fit: BoxFit.cover,
                                               errorBuilder: (context, error, stackTrace) =>
                                                   Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
@@ -128,13 +138,13 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                                       ),
                                       SizedBox(height: 10),
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                                        padding: EdgeInsets.symmetric(horizontal: paddingValue),
                                         alignment: Alignment.center, // Center the text
                                         child: Center(
                                           child: Text(
                                             entreprise,
                                             textAlign: TextAlign.center, // Center the text within the Text widget
-                                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                            style: TextStyle(fontSize: fontSizeTitle, fontWeight: FontWeight.bold),
                                             softWrap: true, // Ensure text wraps on whole words
                                             overflow: TextOverflow.visible, // Handle overflow gracefully
                                           ),
@@ -143,10 +153,10 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                                       if (partenaire.isNotEmpty)
                                         Center(
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                            padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical),
                                             child: Text(
                                               partenaire,
-                                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: fontSizeSubtitle),
                                             ),
                                           ),
                                         ),

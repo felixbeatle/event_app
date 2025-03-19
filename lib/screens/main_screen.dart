@@ -47,10 +47,11 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: Colors.white, // Explicitly set to white
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black, size: 50), // Adjust the size of the hamburger icon
       ),
+      body: _screens[_selectedIndex],
       drawer: Drawer(
         child: Container(
           color: Color.fromARGB(255, 255, 255, 255), // Set the background color of the drawer to a custom color
@@ -83,7 +84,6 @@ class _MainScreenState extends State<MainScreen> {
                 title: Text("Conférences", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
                 onTap: () => _onItemTapped(4),
               ),
-           
               ListTile(
                 leading: Icon(Icons.handshake, color: const Color.fromARGB(255, 0, 0, 0)),
                 title: Text("Partenaires", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
@@ -115,7 +115,7 @@ class _MainScreenState extends State<MainScreen> {
                   }
                 },
               ),
-               ListTile(
+              ListTile(
                 leading: Icon(Icons.favorite, color: const Color.fromARGB(255, 0, 0, 0)),
                 title: Text("Favoris", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
                 onTap: () => _onItemTapped(6),
@@ -124,7 +124,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      body: _screens[_selectedIndex],
     );
   }
 }

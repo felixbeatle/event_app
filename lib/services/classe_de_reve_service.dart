@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class ExhibitorService {
-  static const String postUrl = "https://www.salondelapprentissage.ca/_functions/exhibitors"; 
+class ClasseDeReveService {
+  static const String postUrl = "https://www.salondelapprentissage.ca/_functions/classedereve"; 
 
-  Future<List<dynamic>> fetchExhibitors() async {
+  Future<List<dynamic>> fetchClasseDeReveImages() async {
     try {
       final response = await http.post(
         Uri.parse(postUrl),
@@ -19,26 +19,15 @@ class ExhibitorService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data['exhibitors'] ?? []; // Retourne la liste des exposants
+        print('Fetched Classe de Rêve images: $data'); // Log the fetched data
+        return data['image'] ?? []; // Retourne la liste des images
       } else {
+        print('Erreur API Wix: ${response.body}'); // Log the error response
         throw Exception("Erreur API Wix: ${response.body}");
       }
     } catch (e) {
-      throw Exception("Erreur lors du chargement des exposants: $e");
-    }
-  }
-
-  Future<Map<String, dynamic>?> fetchExhibitorByEntreprise(String entreprise) async {
-    try {
-      final exhibitors = await fetchExhibitors();
-      for (var exhibitor in exhibitors) {
-        if (exhibitor['entreprise'] == entreprise) {
-          return exhibitor;
-        }
-      }
-      return null; // Retourne null si l'exposant n'est pas trouvé
-    } catch (e) {
-      throw Exception("Erreur lors de la recherche de l'exposant: $e");
+      print('Erreur lors du chargement des images: $e'); // Log the exception
+      throw Exception("Erreur lors du chargement des images: $e");
     }
   }
 }

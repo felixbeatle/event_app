@@ -53,6 +53,16 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
+    final double fontSizeTitle = isTablet ? 32 : 22;
+    final double fontSizeSubtitle = isTablet ? 20 : 16;
+    final double paddingValue = isTablet ? 30 : 15;
+    final double imageHeight = isTablet ? 500 : 300;
+    final double buttonFontSize = isTablet ? 20 : 16;
+    final double buttonPaddingHorizontal = isTablet ? 20 : 10;
+    final double buttonPaddingVertical = isTablet ? 10 : 5;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: isLoading
@@ -70,7 +80,7 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                           children: [
                             SizedBox(
                               width: double.infinity, // Full width
-                              height: 300, // Adjust image height
+                              height: imageHeight, // Adjust image height
                               child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -87,7 +97,7 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                           child: Text(
                             "CONFÉRENCES EN SALLE",
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: fontSizeTitle,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -98,7 +108,7 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                           child: Text(
                             "RESERVÉES AUX DÉTENTEURS DE PASSEPORT VIP",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: fontSizeSubtitle,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -110,7 +120,7 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                           child: Text(
                             "Le Salon de l’Apprentissage est fier de vous proposer des conférences inspirantes présentées par des professionnels de l’éducation et réservées aux détenteurs d’un Passeport VIP au coût de 35\$ / 1 jour ou 60\$ / 2 jours. D’une durée de 60 minutes, les conférences ont lieu dans des salles privées à proximité de la Salle d’exposition du Salon de l’Apprentissage. Découvrez des sujets d'actualités en lien avec l'éducation par des experts de divers domaines.",
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: fontSizeSubtitle,
                               color: Colors.black,
                             ),
                             textAlign: TextAlign.justify,
@@ -131,18 +141,17 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                             return Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                  padding: EdgeInsets.symmetric(vertical: paddingValue),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                                        child: 
-                                        Center(child:
-                                          Text(
+                                        padding: EdgeInsets.symmetric(horizontal: paddingValue),
+                                        child: Center(
+                                          child: Text(
                                             title,
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: fontSizeTitle,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black,
                                             ),
@@ -152,28 +161,26 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                                       ),
                                       SizedBox(height: 5),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                                        child: 
-                                        Center(child:
-                                          Text(
+                                        padding: EdgeInsets.symmetric(horizontal: paddingValue),
+                                        child: Center(
+                                          child: Text(
                                             jour,
-                                            style: TextStyle(fontSize: 20),
+                                            style: TextStyle(fontSize: fontSizeSubtitle),
                                           ),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                                        child: 
-                                        Center(child: 
-                                        Text(
-                                          heure,
-                                          style: TextStyle(fontSize: 20),
-                                        ),
+                                        padding: EdgeInsets.symmetric(horizontal: paddingValue),
+                                        child: Center(
+                                          child: Text(
+                                            heure,
+                                            style: TextStyle(fontSize: fontSizeSubtitle),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 10),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                        padding: EdgeInsets.symmetric(horizontal: paddingValue),
                                         child: Image.network(
                                           url,
                                           width: double.infinity,
@@ -187,7 +194,7 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.black, // Black background
-                                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1), // Adjust button size
+                                            padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical), // Adjust button size
                                             shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(0), // Rectangular shape
                                             ),
@@ -202,7 +209,7 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                                           },
                                           child: Text(
                                             "En savoir plus",
-                                            style: TextStyle(color: Colors.white, fontSize: 16), // White text with font size 16
+                                            style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
                                           ),
                                         ),
                                       ),

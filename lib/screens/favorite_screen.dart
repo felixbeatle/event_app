@@ -107,6 +107,16 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
+    final double fontSizeTitle = isTablet ? 28 : 22;
+    final double fontSizeSubtitle = isTablet ? 20 : 16;
+    final double paddingValue = isTablet ? 30 : 15;
+    final double imageHeight = isTablet ? 500 : 300;
+    final double buttonFontSize = isTablet ? 20 : 16;
+    final double buttonPaddingHorizontal = isTablet ? 20 : 10;
+    final double buttonPaddingVertical = isTablet ? 10 : 5;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: isLoading
@@ -124,7 +134,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           children: [
                             SizedBox(
                               width: double.infinity, // Full width
-                              height: 300, // Adjust image height
+                              height: imageHeight, // Adjust image height
                               child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -141,7 +151,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           child: Text(
                             "Bienvenue dans votre liste de favoris!",
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: fontSizeTitle,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -154,7 +164,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           child: Text(
                             "Personnalisez votre expérience au Salon de l’apprentissage en un clin d'œil! Ajoutez vos exposants, conférences et activités préférés en un simple clic sur le cœur à côté de leur nom. C’est rapide, facile et vous garantit de ne rien manquer et de profiter au maximum de votre visite!",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: fontSizeSubtitle,
                               color: Colors.black,
                             ),
                             textAlign: TextAlign.justify,
@@ -172,7 +182,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               return Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                    padding: EdgeInsets.symmetric(vertical: paddingValue),
                                     child: Column(
                                       children: [
                                         GestureDetector(
@@ -200,11 +210,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                               ),
                                               SizedBox(height: 10),
                                               Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                                padding: EdgeInsets.symmetric(horizontal: paddingValue),
                                                 child: Text(
                                                   entreprise,
                                                   style: TextStyle(
-                                                    fontSize: 18,
+                                                    fontSize: fontSizeTitle,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
                                                   ),
@@ -244,7 +254,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               return Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                    padding: EdgeInsets.symmetric(vertical: paddingValue),
                                     child: Column(
                                       children: [
                                         GestureDetector(
@@ -272,11 +282,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                               ),
                                               SizedBox(height: 10),
                                               Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                                padding: EdgeInsets.symmetric(horizontal: paddingValue),
                                                 child: Text(
                                                   title,
                                                   style: TextStyle(
-                                                    fontSize: 18,
+                                                    fontSize: fontSizeTitle,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
                                                   ),
@@ -316,7 +326,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               return Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                    padding: EdgeInsets.symmetric(vertical: paddingValue),
                                     child: Column(
                                       children: [
                                         GestureDetector(
@@ -344,11 +354,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                               ),
                                               SizedBox(height: 10),
                                               Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                                padding: EdgeInsets.symmetric(horizontal: paddingValue),
                                                 child: Text(
                                                   title,
                                                   style: TextStyle(
-                                                    fontSize: 18,
+                                                    fontSize: fontSizeTitle,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
                                                   ),

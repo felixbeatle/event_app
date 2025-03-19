@@ -45,7 +45,15 @@ class _AmbassadorsScreenState extends State<AmbassadorsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("📌 Rendering ListView with ${ambassadors.length} items");
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
+    final double fontSizeTitle = isTablet ? 32 : 22;
+    final double fontSizeSubtitle = isTablet ? 20 : 16;
+    final double paddingValue = isTablet ? 30 : 15;
+    final double imageHeight = isTablet ? 500 : 300;
+    final double buttonFontSize = isTablet ? 20 : 16;
+    final double buttonPaddingHorizontal = isTablet ? 20 : 10;
+    final double buttonPaddingVertical = isTablet ? 10 : 5;
 
     return Scaffold(
       backgroundColor: Colors.white, // Explicitly set to white
@@ -64,7 +72,7 @@ class _AmbassadorsScreenState extends State<AmbassadorsScreen> {
                           children: [
                             SizedBox(
                               width: double.infinity, // Full width
-                              height: 300, // Adjust image height
+                              height: imageHeight, // Adjust image height
                               child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -77,21 +85,21 @@ class _AmbassadorsScreenState extends State<AmbassadorsScreen> {
                             ),
                           ],
                         ),
-                        Center(child:  // Add space above the header image
-                        Text(
-                          "AMBASSADEURS 2025",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                        Center(
+                          child: Text(
+                            "AMBASSADEURS 2025",
+                            style: TextStyle(
+                              fontSize: fontSizeTitle,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
                         ),
                         SizedBox(height: 10),
                         Text(
                           "Nous sommes heureux de vous présenter les ambassadeurs du Salon de l'apprentissage, des personnalités publiques qui partagent nos objectifs, notre mission et qui s'impliquent activement dans leur milieu pour faire rayonner les valeurs entourant la réussite éducative et le bien-être des jeunes.",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: fontSizeSubtitle,
                             color: Colors.black,
                           ),
                           textAlign: TextAlign.justify,
@@ -107,7 +115,7 @@ class _AmbassadorsScreenState extends State<AmbassadorsScreen> {
                             final photoUrl = ambassador['photoambassadeur'] ?? '';
                             final fonction = ambassador['fonction'] ?? '';
                             return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 15.0),
+                              padding: EdgeInsets.symmetric(vertical: paddingValue),
                               child: Row(
                                 children: [
                                   Image.network(
@@ -123,26 +131,26 @@ class _AmbassadorsScreenState extends State<AmbassadorsScreen> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Center(child: 
-                                        Text(
-                                          name,
-                                          style: TextStyle(fontSize: 18),
-                                          textAlign: TextAlign.center,
+                                        Center(
+                                          child: Text(
+                                            name,
+                                            style: TextStyle(fontSize: fontSizeTitle),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
-                                        ),
-                                        Center(child: 
-                                        Text(
-                                          fonction,
-                                          style: TextStyle(fontSize: 14),
-                                          textAlign: TextAlign.center,
-                                        ),
+                                        Center(
+                                          child: Text(
+                                            fonction,
+                                            style: TextStyle(fontSize: fontSizeSubtitle),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                         SizedBox(height: 5),
-                                       Center(
+                                        Center(
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.black, // Black background
-                                              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1), // Button size
+                                              padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical), // Button size
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(0), // Rectangular shape
                                               ),
@@ -159,6 +167,7 @@ class _AmbassadorsScreenState extends State<AmbassadorsScreen> {
                                               "En savoir plus",
                                               style: TextStyle(
                                                 color: Colors.white, // White text
+                                                fontSize: buttonFontSize,
                                               ),
                                             ),
                                           ),

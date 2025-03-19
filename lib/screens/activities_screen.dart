@@ -51,6 +51,16 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
+    final double fontSizeTitle = isTablet ? 32 : 22;
+    final double fontSizeSubtitle = isTablet ? 20 : 16;
+    final double paddingValue = isTablet ? 30 : 15;
+    final double imageHeight = isTablet ? 500 : 300;
+    final double buttonFontSize = isTablet ? 20 : 16;
+    final double buttonPaddingHorizontal = isTablet ? 20 : 10;
+    final double buttonPaddingVertical = isTablet ? 10 : 5;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: isLoading
@@ -68,7 +78,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                           children: [
                             SizedBox(
                               width: double.infinity, // Full width
-                              height: 300, // Adjust image height
+                              height: imageHeight, // Adjust image height
                               child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -85,7 +95,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                           child: Text(
                             "ACTIVITÉS",
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: fontSizeTitle,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -95,7 +105,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                         Text(
                           "Nous sommes heureux de vous présenter les activités du Salon de l'apprentissage, des événements qui partagent nos objectifs, notre mission et qui s'impliquent activement dans leur milieu pour faire rayonner les valeurs entourant la réussite éducative et le bien-être des jeunes.",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: fontSizeSubtitle,
                             color: Colors.black,
                           ),
                           textAlign: TextAlign.justify,
@@ -113,12 +123,12 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                             return Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                  padding: EdgeInsets.symmetric(vertical: paddingValue),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.all(15.0),
+                                        padding: EdgeInsets.all(paddingValue),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
@@ -140,7 +150,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                         child: Text(
                                           title,
                                           style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: fontSizeTitle,
                                             color: const Color.fromARGB(255, 0, 0, 0),
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -152,7 +162,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.black, // Black background
-                                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), // Button size
+                                            padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical), // Button size
                                             shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(0), // Rectangular shape
                                             ),
@@ -167,7 +177,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                           },
                                           child: Text(
                                             "En savoir plus",
-                                            style: TextStyle(color: Colors.white, fontSize: 16), // White text with font size 16
+                                            style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
                                           ),
                                         ),
                                       ),
