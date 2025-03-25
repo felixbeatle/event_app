@@ -5,6 +5,7 @@ import 'package:event_app/screens/exhibitor_details_screen.dart';
 import 'package:event_app/controllers/favorite_controller.dart'; // Import the FavoriteController
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
 
 class ExhibitorsScreen extends StatefulWidget {
   @override
@@ -144,14 +145,16 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                                           decoration: BoxDecoration(
                                             border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                                           ),
-                                          child: Image.network(
-                                            logoUrl, // Use the actual logo URL
-                                            width: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
-                                            height: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (context, error, stackTrace) =>
-                                                Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
-                                          ),
+                                          child: logoUrl.isNotEmpty
+                                              ? CachedNetworkImage(
+                                                  imageUrl: logoUrl, // Use the actual logo URL
+                                                  width: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
+                                                  height: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                                  errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                                )
+                                              : Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                         ),
                                       ),
                                       ),

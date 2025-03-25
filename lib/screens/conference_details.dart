@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:event_app/controllers/favorite_controller.dart'; // Import the FavoriteController
 import 'package:event_app/services/exhibitor_service.dart'; // Import the ExhibitorService
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
+import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
 import 'exhibitor_details_screen.dart'; // Import the ExhibitorDetailsScreen
 
 class ConferenceDetailsScreen extends StatefulWidget {
@@ -97,12 +98,12 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
               decoration: BoxDecoration(
                 border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
               ),
-              child: Image.network(
-                url,
+              child: CachedNetworkImage(
+                imageUrl: url,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
               ),
             ),
             SizedBox(height: 10),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:event_app/controllers/favorite_controller.dart';
+import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
 
 class ExhibitorDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> exhibitor;
@@ -107,13 +108,13 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                   ),
-                  child: Image.network(
-                    logoUrl,
+                  child: CachedNetworkImage(
+                    imageUrl: logoUrl,
                     width: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
                     height: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                   ),
                 ),
               ),
@@ -233,11 +234,11 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
                       }
                     },
                     child: urlImagePub.isNotEmpty
-                        ? Image.network(
-                            urlImagePub,
+                        ? CachedNetworkImage(
+                            imageUrl: urlImagePub,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(), // Return an empty container if there's an error
+                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Container(), // Return an empty container if there's an error
                           )
                         : Container(), // Return an empty container if urlImagePub is empty
                   ),

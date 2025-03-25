@@ -9,6 +9,7 @@ import 'package:event_app/screens/conference_details.dart'; // Import Conference
 import 'package:event_app/controllers/favorite_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
 
 class FavoriteScreen extends StatefulWidget {
   @override
@@ -200,12 +201,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                 decoration: BoxDecoration(
                                                   border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                                                 ),
-                                                child: Image.network(
-                                                  logoUrl,
+                                                child: CachedNetworkImage(
+                                                  imageUrl: logoUrl,
                                                   width: double.infinity,
                                                   fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) =>
-                                                      Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                                  errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                                 ),
                                               ),
                                               SizedBox(height: 10),
@@ -272,12 +273,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                 decoration: BoxDecoration(
                                                   border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                                                 ),
-                                                child: Image.network(
-                                                  url,
+                                                child: CachedNetworkImage(
+                                                  imageUrl: url,
                                                   width: double.infinity,
                                                   fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) =>
-                                                      Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                                  errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                                 ),
                                               ),
                                               SizedBox(height: 10),
@@ -344,12 +345,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                 decoration: BoxDecoration(
                                                   border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                                                 ),
-                                                child: Image.network(
-                                                  url,
+                                                child: CachedNetworkImage(
+                                                  imageUrl: url,
                                                   width: double.infinity,
                                                   fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) =>
-                                                      Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                                  errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                                 ),
                                               ),
                                               SizedBox(height: 10),

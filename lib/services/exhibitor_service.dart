@@ -1,11 +1,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ExhibitorService {
   static const String postUrl = "https://www.salondelapprentissage.ca/_functions/exhibitors"; 
+  static const String cacheKey = "cached_exhibitors";
 
   Future<List<dynamic>> fetchExhibitors() async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+      final cachedData = prefs.getString(cacheKey);
+
+      if (cachedData != null) {
+        // Return cached data if available
+        return jsonDecode(cachedData);
+      }
+
       final response = await http.post(
         Uri.parse(postUrl),
         headers: {
@@ -19,7 +29,8 @@ class ExhibitorService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data['exhibitors'] ?? []; // Retourne la liste des exposants
+        await prefs.setString(cacheKey, jsonEncode(data['exhibitors'])); // Cache the data
+        return data['exhibitors'] ?? []; // Return the list of exhibitors
       } else {
         throw Exception("Erreur API Wix: ${response.body}");
       }
@@ -36,7 +47,7 @@ class ExhibitorService {
           return exhibitor;
         }
       }
-      return null; // Retourne null si l'exposant n'est pas trouvé
+      return null; // Return null if the exhibitor is not found
     } catch (e) {
       throw Exception("Erreur lors de la recherche de l'exposant: $e");
     }

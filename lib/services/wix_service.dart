@@ -10,9 +10,6 @@ class WixService {
   // Fonction pour tester la connexion API Wix
   Future<void> testWixConnection() async {
     final Uri url = Uri.parse(baseUrl);
-
-    print("📡 Envoi d'une requête de test à Wix : $url");
-
     final response = await http.post(
       url,
       headers: {
@@ -27,15 +24,5 @@ class WixService {
         "paging": { "limit": 10 } // Limite à 10 résultats
       }),
     );
-
-    print("🔄 Réponse reçue : ${response.statusCode}");
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print("✅ Connexion réussie à Wix !");
-      print("🖥️ Réponse : ${jsonEncode(data)}");
-    } else {
-      print("❌ Erreur ${response.statusCode} : ${response.body}");
-    }
   }
 }

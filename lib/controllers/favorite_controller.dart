@@ -6,13 +6,11 @@ class FavoriteController {
   List<String> favoriteItems = []; // Use a single list for both exhibitors and activities
 
   Future<void> loadFavorites() async {
-    print("Load fav"); // Log the loaded favorites
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/favorites.json');
     if (await file.exists()) {
       final contents = await file.readAsString();
       favoriteItems = List<String>.from(json.decode(contents));
-      print("Loaded favorites: $favoriteItems"); // Log the loaded favorites
     }
   }
 

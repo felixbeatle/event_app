@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:event_app/services/activity_service.dart';
 import 'activity_details.dart';
 import 'package:event_app/controllers/favorite_controller.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   @override
@@ -24,11 +25,6 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
     try {
       await _favoriteController.loadFavorites();
       final data = await ActivityService().fetchActivities();
-
-      // Log the activities to see what is in the 'number' field
-      data.forEach((activity) {
-        print('Activity: ${activity['title']}, Number: ${activity['number']}');
-      });
 
       // Sort the list by column number
       data.sort((a, b) {
@@ -135,12 +131,12 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                           ),
                                           child: AspectRatio(
                                             aspectRatio: 2 / 3, // Adjust the aspect ratio as needed
-                                            child: Image.network(
-                                              url,
+                                            child: CachedNetworkImage(
+                                              imageUrl: url,
                                               width: double.infinity,
                                               fit: BoxFit.contain, // Ensure the image is fully visible
-                                              errorBuilder: (context, error, stackTrace) =>
-                                                  Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                              errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                             ),
                                           ),
                                         ),

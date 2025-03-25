@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:event_app/controllers/favorite_controller.dart';
 import 'package:event_app/services/exhibitor_service.dart'; // Import the ExhibitorService
 import 'package:event_app/services/classe_de_reve_service.dart'; // Import the ClasseDeReveService
+import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
 import 'exhibitor_details_screen.dart'; // Import the ExhibitorDetailsScreen
 
 class ActivityDetailsScreen extends StatefulWidget {
@@ -25,14 +26,11 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
   void initState() {
     super.initState();
     _loadFavorites();
-    print('Activity title: ${widget.activity['title']}'); // Log the title
     if (widget.activity['title'] == "Le Grand Tirage – La Classe de Rêve") {
-      print('Classe de Rêve');
       classedereve = true;
       _loadClasseDeReveImages();
     } else {
       classedereve = false;
-      print('Not Classe de Rêve');
     }
   }
 
@@ -49,22 +47,19 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
     });
     try {
       final images = await _classeDeReveService.fetchClasseDeReveImages();
-      print('Fetched Classe de Rêve images: $images'); // Log the fetched images
-
-      // Sort images by the column number
       images.sort((a, b) => a['number'].compareTo(b['number']));
-
       setState(() {
         classeDeReveImages = images.map<String>((image) => image['urlvisible']).toList();
         isLoadingImages = false;
       });
     } catch (e) {
-      print('Error fetching Classe de Rêve images: $e');
+
       setState(() {
         isLoadingImages = false;
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
@@ -125,15 +120,16 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                 ),
-                child: Image.network(
-                  url,
+                child: CachedNetworkImage(
+                  imageUrl: url,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                 ),
               ),
-            ),            SizedBox(height: 40),
+            ),
+            SizedBox(height: 40),
             Center(
               child: Text(
                 title,
@@ -198,38 +194,38 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
             ),
             SizedBox(height: 40),
             if (isentreprise)
-             Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black, // Black background
-                  padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical), // Button size
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0), // Rectangular shape
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // Black background
+                    padding: EdgeInsets.symmetric(horizontal: buttonPaddingHorizontal, vertical: buttonPaddingVertical), // Button size
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0), // Rectangular shape
+                    ),
+                  ),
+                  onPressed: () async {
+                    try {
+                      final exhibitor = await ExhibitorService().fetchExhibitorByEntreprise(entreprise);
+                      if (exhibitor != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
+                          ),
+                        );
+                      } else {
+                        print('Exhibitor not found');
+                      }
+                    } catch (e) {
+                      print('Error fetching exhibitor: $e');
+                    }
+                  },
+                  child: Text(
+                    isentreprise2 ? "VOIR LES BOUGEOTTES" : "VOIR L'EXPOSANT",
+                    style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
                   ),
                 ),
-                onPressed: () async {
-                  try {
-                    final exhibitor = await ExhibitorService().fetchExhibitorByEntreprise(entreprise);
-                    if (exhibitor != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ExhibitorDetailsScreen(exhibitor: exhibitor),
-                        ),
-                      );
-                    } else {
-                      print('Exhibitor not found');
-                    }
-                  } catch (e) {
-                    print('Error fetching exhibitor: $e');
-                  }
-                },
-                child: Text(
-                  isentreprise2 ? "VOIR LES BOUGEOTTES" : "VOIR L'EXPOSANT",
-                  style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
-                ),
               ),
-            ),
             SizedBox(height: 10),
             if (isentreprise2)
               Center(
@@ -259,7 +255,7 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                     }
                   },
                   child: Text(
-                  isentreprise2 ? "VOIR LES JOUETS CIBOULOT" : "VOIR L'EXPOSANT",
+                    isentreprise2 ? "VOIR LES JOUETS CIBOULOT" : "VOIR L'EXPOSANT",
                     style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
                   ),
                 ),
@@ -272,12 +268,12 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                 for (var imageUrl in classeDeReveImages)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Image.network(
-                      imageUrl,
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                     ),
                   ),
             ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:event_app/services/exhibitor_service.dart';
 import 'package:event_app/screens/exhibitor_details_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
 
 class ContributorsScreen extends StatefulWidget {
   @override
@@ -94,12 +95,12 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        Center(child: 
-                        Text(
-                          "Cliquez sur les logos pour en savoir plus",
-                          style: TextStyle(fontSize: subsubtitle, color: Colors.grey),
-                          textAlign: TextAlign.center,
-                        ),
+                        Center(
+                          child: Text(
+                            "Cliquez sur les logos pour en savoir plus",
+                            style: TextStyle(fontSize: subsubtitle, color: Colors.grey),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                         SizedBox(height: 25),
                         ListView.builder(
@@ -134,13 +135,13 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                                             decoration: BoxDecoration(
                                               border: Border.all(color: const Color.fromARGB(255, 230, 230, 230), width: 2),
                                             ),
-                                            child: Image.network(
-                                              logoUrl, // Use the actual logo URL
+                                            child: CachedNetworkImage(
+                                              imageUrl: logoUrl, // Use the actual logo URL
                                               width: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
                                               height: MediaQuery.of(context).size.width / (isTablet ? 2 : 1.5),
                                               fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) =>
-                                                  Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                              errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                             ),
                                           ),
                                         ),

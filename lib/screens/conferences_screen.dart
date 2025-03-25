@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:event_app/services/conference_service.dart';
 import 'package:event_app/controllers/favorite_controller.dart'; // Import the FavoriteController
+import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
 import 'conference_details.dart';
 
 class ConferencesScreen extends StatefulWidget {
@@ -24,12 +25,6 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
   Future<void> loadConferences() async {
     try {
       final data = await ConferenceService().fetchConferences();
-      print("Fetched conferences: $data");
-
-      // Log the conferences to see what is in the 'number' field
-      data.forEach((conference) {
-        print('Conference: ${conference['title']}, Number: ${conference['ordre']}');
-      });
 
       // Sort the list by column number
       data.sort((a, b) {
@@ -181,12 +176,12 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                                       SizedBox(height: 10),
                                       Padding(
                                         padding: EdgeInsets.symmetric(horizontal: paddingValue),
-                                        child: Image.network(
-                                          url,
+                                        child: CachedNetworkImage(
+                                          imageUrl: url,
                                           width: double.infinity,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                         ),
                                       ),
                                       SizedBox(height: 20),

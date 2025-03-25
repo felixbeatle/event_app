@@ -19,9 +19,7 @@ class ActivityService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print(data);
         final activities = data['activities'] ?? [];
-        print('Number of activities fetched: ${activities.length}');
         return activities; // Return the list of activities
       } else {
         throw Exception("API Error: ${response.body}");

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:event_app/services/conference_service.dart';
+import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
 import 'conference_details.dart';
 
 class AmbassadorDetailsScreen extends StatelessWidget {
@@ -77,13 +78,13 @@ class AmbassadorDetailsScreen extends StatelessWidget {
             SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Image.network(
-                photoUrl,
+              child: CachedNetworkImage(
+                imageUrl: photoUrl,
                 width: double.infinity,
                 height: MediaQuery.of(context).size.width - 20, // Make the image square
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
               ),
             ),
             SizedBox(height: spaceheight),
@@ -143,7 +144,6 @@ class AmbassadorDetailsScreen extends StatelessWidget {
                     try {
                       final conference = await ConferenceService().fetchConferenceByTitle(titleConference1);
                       if (conference != null) {
-                        print('Fetched Conference 1: $conference');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -180,7 +180,6 @@ class AmbassadorDetailsScreen extends StatelessWidget {
                       print('titleConference2: $titleConference2');
                       final conference = await ConferenceService().fetchConferenceByTitle(titleConference2);
                       if (conference != null) {
-                        print('Fetched Conference 2: $conference');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -214,11 +213,11 @@ class AmbassadorDetailsScreen extends StatelessWidget {
                     }
                   },
                   child: logo.isNotEmpty
-                      ? Image.network(
-                          logo,
+                      ? CachedNetworkImage(
+                          imageUrl: logo,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(), // Return an empty container if there's an error
+                          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) => Container(), // Return an empty container if there's an error
                         )
                       : Container(), // Return an empty container if urlImagePub is empty
                 ),

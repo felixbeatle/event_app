@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:event_app/services/ambassador_service.dart';
 import 'package:event_app/screens/ambassador_details.dart';
+import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
 
 class AmbassadorsScreen extends StatefulWidget {
   @override
@@ -22,13 +23,8 @@ class _AmbassadorsScreenState extends State<AmbassadorsScreen> {
     try {
       final data = await AmbassadorService().fetchAmbassadors();
       
-      // Log total number of ambassadors received
-      print("🔹 Total ambassadors received: ${data.length}");
 
-      // Log first few ambassadors to verify structure
-      if (data.isNotEmpty) {
-        print("🔹 First ambassador sample: ${data.sublist(0, data.length > 3 ? 3 : data.length)}");
-      }
+
 
       setState(() {
         ambassadors = data;
@@ -39,7 +35,6 @@ class _AmbassadorsScreenState extends State<AmbassadorsScreen> {
         errorMessage = e.toString();
         isLoading = false;
       });
-      print("❌ Error loading ambassadors: $e");
     }
   }
 
@@ -118,13 +113,13 @@ class _AmbassadorsScreenState extends State<AmbassadorsScreen> {
                               padding: EdgeInsets.symmetric(vertical: paddingValue),
                               child: Row(
                                 children: [
-                                  Image.network(
-                                    photoUrl,
+                                  CachedNetworkImage(
+                                    imageUrl: photoUrl,
                                     width: MediaQuery.of(context).size.width / 2,
                                     height: MediaQuery.of(context).size.width / 2,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) =>
-                                        Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                                   ),
                                   SizedBox(width: 10),
                                   Expanded(

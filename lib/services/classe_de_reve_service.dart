@@ -19,14 +19,11 @@ class ClasseDeReveService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print('Fetched Classe de Rêve images: $data'); // Log the fetched data
         return data['image'] ?? []; // Retourne la liste des images
       } else {
-        print('Erreur API Wix: ${response.body}'); // Log the error response
         throw Exception("Erreur API Wix: ${response.body}");
       }
     } catch (e) {
-      print('Erreur lors du chargement des images: $e'); // Log the exception
       throw Exception("Erreur lors du chargement des images: $e");
     }
   }
