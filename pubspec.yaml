@@ -2,7 +2,7 @@ name: event_app
 description: "A new Flutter project."
 publish_to: 'none' 
 
-version: 2.0.8+4
+version: 2.0.9+5
 
 environment:
   sdk: ^3.7.0
