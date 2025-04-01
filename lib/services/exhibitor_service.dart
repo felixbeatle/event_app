@@ -1,21 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ExhibitorService {
-  static const String postUrl = "https://www.salondelapprentissage.ca/_functions/exhibitors"; 
-  static const String cacheKey = "cached_exhibitors";
+  static const String postUrl = "https://www.salondelapprentissage.ca/_functions/exhibitors";
 
   Future<List<dynamic>> fetchExhibitors() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final cachedData = prefs.getString(cacheKey);
-
-      if (cachedData != null) {
-        // Return cached data if available
-        return jsonDecode(cachedData);
-      }
-
       final response = await http.post(
         Uri.parse(postUrl),
         headers: {
@@ -29,7 +19,6 @@ class ExhibitorService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        await prefs.setString(cacheKey, jsonEncode(data['exhibitors'])); // Cache the data
         return data['exhibitors'] ?? []; // Return the list of exhibitors
       } else {
         throw Exception("Erreur API Wix: ${response.body}");
