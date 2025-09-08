@@ -1,8 +1,8 @@
 name: event_app
-description: "A new Flutter project."
+description: "Application officielle du Salon national de l'éducation - Découvrez les exposants, conférences et activités."
 publish_to: 'none' 
 
-version: 3.0.1+7
+version: 3.0.2+8
 
 environment:
   sdk: ^3.7.0

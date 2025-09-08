@@ -221,7 +221,7 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                     }
                   },
                   child: Text(
-                    isentreprise2 ? "VOIR LES BOUGEOTTES" : "VOIR L'EXPOSANT",
+                    isentreprise2 ? "VOIR TOYBOX" : "VOIR L'EXPOSANT",
                     style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
                   ),
                 ),
@@ -255,7 +255,7 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                     }
                   },
                   child: Text(
-                    isentreprise2 ? "VOIR LES JOUETS CIBOULOT" : "VOIR L'EXPOSANT",
+                    isentreprise2 ? "VOIR MINIMO" : "VOIR L'EXPOSANT",
                     style: TextStyle(color: Colors.white, fontSize: buttonFontSize), // White text with font size 16
                   ),
                 ),

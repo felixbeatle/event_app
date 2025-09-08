@@ -18,13 +18,12 @@ class HomeScreen extends StatelessWidget {
                   return Center(child: Text('Could not load image'));
                 },
               ),
-              // Spacer to add 50 pixels of space below the image
-              SizedBox(height: 50),
+              SizedBox(height: 5),
               // Centered button
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    final url = Uri.parse("https://www.salondelapprentissage.ca/event-details/salon-de-lapprentissage-de-montreal2025");
+                    final url = Uri.parse("https://www.salondelapprentissage.ca/billetterie");
                     try {
                       await launchUrl(url, mode: LaunchMode.externalApplication);
                     } catch (e) {

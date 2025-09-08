@@ -28,17 +28,34 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
     try {
       final data = await ExhibitorService().fetchExhibitors();
       
+      // Filter exhibitors - only keep those where 'include' is "true"
+      final filteredData = data.where((exhibitor) {
+        final includeValue = exhibitor['include']?.toString() ?? 'false';
+        return includeValue.toLowerCase() == 'true';
+      }).toList();
+      
       // Sort exhibitors by the 'number' field
-      data.sort((a, b) {
+      filteredData.sort((a, b) {
         final columnA = double.tryParse((a['ordre'] ?? '0').toString()) ?? 0.0;
         final columnB = double.tryParse((b['ordre'] ?? '0').toString()) ?? 0.0;
         return columnA.compareTo(columnB);
       });
 
       setState(() {
-        exhibitors = data;
+        exhibitors = filteredData;
         isLoading = false;
       });
+      
+      // Simple logging - just name and number
+      print('========== EXHIBITORS LIST ==========');
+      print('Total exhibitors (after filtering): ${exhibitors.length}');
+      print('Original data count: ${data.length}');
+      for (int i = 0; i < exhibitors.length; i++) {
+        final name = exhibitors[i]['title'] ?? 'Unknown';
+        final includeValue = exhibitors[i]['include'];
+        print('Exhibitor $i: $name (include: $includeValue)');
+      }
+      print('======================================');
     } catch (e) {
       setState(() {
         errorMessage = e.toString();
@@ -119,8 +136,8 @@ class _ExhibitorsScreenState extends State<ExhibitorsScreen> {
                           itemBuilder: (context, index) {
                             final exhibitor = exhibitors[index];
                             
-                            final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
-                            final logoUrl = exhibitor['urlImagePublique'] ?? ''; // Use the actual logo URL or fallback to test URL
+                            final entreprise = exhibitor['title'] ?? 'Nom inconnu';
+                            final logoUrl = exhibitor['urlimagepublique'] ?? ''; // Use the actual logo URL or fallback to test URL
                             final partenaire = exhibitor['partenariat'] ?? '';
 
                             return Column(

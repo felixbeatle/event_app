@@ -43,14 +43,15 @@ class _ExhibitorDetailsScreenState extends State<ExhibitorDetailsScreen> {
     final double buttonPaddingVertical = isTablet ? 10 : 5;
     final double iconSize = isTablet ? 48 : 32;
 
-    final entreprise = widget.exhibitor['entreprise'] ?? 'Nom inconnu';
-    final kiosque = widget.exhibitor['kiosque'] ?? 'N/A';
-    final logoUrl = widget.exhibitor['urlImagePublique'] ?? '';
+    final entreprise = widget.exhibitor['title'] ?? 'Nom inconnu';
+    final kiosque = widget.exhibitor['kiosque1'] ?? 'N/A';
+    final logoUrl = widget.exhibitor['urlimagepublique'] ?? '';
     final partenaire = widget.exhibitor['partenariat'] ?? '';
-    final description = widget.exhibitor['partenaireSeulementDescription'] ?? '';
+    final description = widget.exhibitor['descriptionPartenaireSeulement'] ?? '';
     final siteInternetDeLEntreprise = widget.exhibitor['siteInternetDeLEntreprise'] ?? '';
     final urlPub = widget.exhibitor['urlPub'] ?? '';
     final urlImagePub = widget.exhibitor['imagePubVisible'] ?? '';
+    
 
     if (!isFavoritesLoaded) {
       return Scaffold(

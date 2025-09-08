@@ -67,7 +67,7 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
               : Padding(
                   padding: const EdgeInsets.only(top: 0.0), // Add 50px padding from the top
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -110,17 +110,6 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Center(
-                          child: Text(
-                            "Le Salon de l’Apprentissage est fier de vous proposer des conférences inspirantes présentées par des professionnels de l’éducation et réservées aux détenteurs d’un Passeport VIP au coût de 35\$ / 1 jour ou 60\$ / 2 jours. D’une durée de 60 minutes, les conférences ont lieu dans des salles privées à proximité de la Salle d’exposition du Salon de l’Apprentissage. Découvrez des sujets d'actualités en lien avec l'éducation par des experts de divers domaines.",
-                            style: TextStyle(
-                              fontSize: fontSizeSubtitle,
-                              color: Colors.black,
-                            ),
-                            textAlign: TextAlign.justify,
-                          ),
-                        ),
                         SizedBox(height: 20),
                         ListView.builder(
                           shrinkWrap: true, // Ensure the ListView takes only the necessary space
@@ -133,13 +122,19 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                             final heure = conference['heure'] ?? 'Heure inconnue';
                             final url = conference['url'] ?? '';
 
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: paddingValue),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
+                            return Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(255, 180, 180, 180), width: 1.5),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: paddingValue),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
                                       Padding(
                                         padding: EdgeInsets.symmetric(horizontal: paddingValue),
                                         child: Center(
@@ -211,11 +206,8 @@ class _ConferencesScreenState extends State<ConferencesScreen> {
                                     ],
                                   ),
                                 ),
-                                Divider(
-                                  color: const Color.fromARGB(255, 211, 211, 211), // Gray color
-                                  thickness: 1, // Thickness of the line
-                                ),
                               ],
+                            ),
                             );
                           },
                         ),

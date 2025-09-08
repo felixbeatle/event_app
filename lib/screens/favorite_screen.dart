@@ -43,7 +43,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       
       // Filter exhibitors to only include favorites
       final favoriteExhibitors = data.where((exhibitor) {
-        final entreprise = exhibitor['entreprise'] ?? '';
+        final entreprise = exhibitor['title'] ?? '';
         return _favoriteController.isFavorite(entreprise);
       }).toList();
 
@@ -177,8 +177,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           physics: NeverScrollableScrollPhysics(), // Disable ListView's own scrolling
                           children: [
                             ...exhibitors.map((exhibitor) {
-                              final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
-                              final logoUrl = exhibitor['urlImagePublique'] ?? '';
+                              final entreprise = exhibitor['title'] ?? 'Nom inconnu';
+                              final logoUrl = exhibitor['urlimagepublique'] ?? '';
 
                               return Column(
                                 children: [

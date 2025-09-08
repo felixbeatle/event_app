@@ -32,7 +32,7 @@ class ExhibitorService {
     try {
       final exhibitors = await fetchExhibitors();
       for (var exhibitor in exhibitors) {
-        if (exhibitor['entreprise'] == entreprise) {
+        if (exhibitor['title'] == entreprise) {
           return exhibitor;
         }
       }

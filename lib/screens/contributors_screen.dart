@@ -27,12 +27,39 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
       final partners = data.where((exhibitor) => exhibitor['partenariat'] != null && exhibitor['partenariat'].isNotEmpty).toList();
 
       // Sort partners by ordrepartenaire
-      partners.sort((a, b) => (a['ordrepartenaire'] ?? 0).compareTo(b['ordrepartenaire'] ?? 0));
+      partners.sort((a, b) {
+        // Safely convert ordrepartenaire to double, handling both string and numeric cases
+        double getOrderValue(dynamic value) {
+          if (value == null) return 0.0;
+          if (value is double) return value;
+          if (value is int) return value.toDouble();
+          if (value is String) {
+            return double.tryParse(value) ?? 0.0;
+          }
+          return 0.0;
+        }
+        
+        double orderA = getOrderValue(a['ordrepartenaire']);
+        double orderB = getOrderValue(b['ordrepartenaire']);
+        return orderA.compareTo(orderB);
+      });
 
       setState(() {
         exhibitors = partners;
         isLoading = false;
       });
+      
+      // Debug logging - show each exhibitor and its order
+      print('========== CONTRIBUTORS ORDER DEBUG ==========');
+      print('Total partners: ${exhibitors.length}');
+      for (int i = 0; i < exhibitors.length; i++) {
+        final exhibitor = exhibitors[i];
+        final name = exhibitor['title'] ?? exhibitor['entreprise'] ?? 'Unknown';
+        final orderValue = exhibitor['ordrepartenaire'];
+        print('Partner $i: $name (ordrepartenaire: $orderValue - ${orderValue.runtimeType})');
+      }
+      print('=============================================');
+      
     } catch (e) {
       setState(() {
         errorMessage = e.toString();
@@ -109,11 +136,12 @@ class _ContributorsScreenState extends State<ContributorsScreen> {
                           itemCount: exhibitors.length,
                           itemBuilder: (context, index) {
                             final exhibitor = exhibitors[index];
-
-                            final entreprise = exhibitor['entreprise'] ?? 'Nom inconnu';
-                            final logoUrl = exhibitor['urlImagePublique'] ?? ''; // Use the actual logo URL or fallback to test URL
+                            
+            
+                            
+                            final entreprise = exhibitor['title'] ?? 'Nom inconnu';
+                            final logoUrl = exhibitor['urlimagepublique']  ?? ''; // Try both field names
                             final partenaire = exhibitor['partenariat'] ?? '';
-
                             return Column(
                               children: [
                                 Padding(

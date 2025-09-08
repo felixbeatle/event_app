@@ -210,7 +210,7 @@ class _ConferenceDetailsScreenState extends State<ConferenceDetailsScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  final url = Uri.parse("https://www.salondelapprentissage.ca/event-details/salon-de-lapprentissage-de-montreal2025");
+                  final url = Uri.parse("https://www.salondelapprentissage.ca/billetterie");
                   try {
                     await launchUrl(url, mode: LaunchMode.externalApplication);
                   } catch (e) {
