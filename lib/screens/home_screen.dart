@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               // Image at the top
               Image.asset(
-                "assets/images/Accueil.jpg", // Ensure this path is correct
+                "assets/images/Acceuil.jpg", // Ensure this path is correct
                 fit: BoxFit.contain, // Keep full image without cropping
                 errorBuilder: (context, error, stackTrace) {
                   return Center(child: Text('Could not load image'));
