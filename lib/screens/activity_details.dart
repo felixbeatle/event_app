@@ -3,7 +3,9 @@ import 'package:event_app/controllers/favorite_controller.dart';
 import 'package:event_app/services/exhibitor_service.dart'; // Import the ExhibitorService
 import 'package:event_app/services/classe_de_reve_service.dart'; // Import the ClasseDeReveService
 import 'package:cached_network_image/cached_network_image.dart'; // Import the CachedNetworkImage package
+import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 import 'exhibitor_details_screen.dart'; // Import the ExhibitorDetailsScreen
+import 'formulaire_screen.dart'; // Import the FormulaireScreen
 
 class ActivityDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> activity;
@@ -268,14 +270,63 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                 for (var imageUrl in classeDeReveImages)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FormulaireScreen(
+                              activityTitle: widget.activity['title'] ?? 'Classe de Rêve',
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: CachedNetworkImage(
+                            imageUrl: imageUrl,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
+              // Message informatif
+              SizedBox(height: 20),
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 252, 237, 24).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Color.fromARGB(255, 252, 237, 24), width: 2),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.touch_app, color: Colors.black, size: 24),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          "Cliquez sur une image pour ouvrir le formulaire dans l'application",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
             SizedBox(height: 40),
           ],

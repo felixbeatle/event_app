@@ -6,6 +6,10 @@ import 'favorite_screen.dart'; // Import the FavoriteScreen
 import 'ambassadors_screen.dart';
 import 'activities_screen.dart';
 import 'contributors_screen.dart'; // Import the ContributorsScreen
+import 'activity_details.dart'; // Import for Classe de Rêve navigation
+import 'package:event_app/services/activity_service.dart'; // Import ActivityService
+import 'package:event_app/services/version_check_service.dart'; // Import VersionCheckService
+import 'package:event_app/widgets/update_dialog.dart'; // Import UpdateDialog
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 
 class MainScreen extends StatefulWidget {
@@ -15,6 +19,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  final VersionCheckService _versionCheckService = VersionCheckService();
 
   final List<Widget> _screens = [
     HomeScreen(),
@@ -26,11 +31,34 @@ class _MainScreenState extends State<MainScreen> {
     FavoriteScreen(), // Add FavoriteScreen here
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    // Check for app updates after the screen is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForUpdates();
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
     Navigator.pop(context); // Close the drawer after selecting an item
+  }
+
+  /// Check for app updates
+  Future<void> _checkForUpdates() async {
+    try {
+      final updateInfo = await _versionCheckService.checkForUpdate();
+      
+      if (updateInfo.needsUpdate && mounted) {
+        UpdateDialog.show(context, updateInfo);
+      }
+    } catch (e) {
+      print('Error checking for updates: $e');
+      // Silently fail - don't bother user with update check errors
+    }
   }
 
   Future<void> _launchURL(String url) async {
@@ -39,6 +67,45 @@ class _MainScreenState extends State<MainScreen> {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> _navigateToClasseDeReve() async {
+    Navigator.pop(context); // Close the drawer
+    try {
+      final ActivityService activityService = ActivityService();
+      final activities = await activityService.fetchActivities();
+      
+      // Find the "Le Grand Tirage – La Classe de Rêve" activity
+      final classeDeReveActivity = activities.firstWhere(
+        (activity) => activity['title'] == "Le Grand Tirage – La Classe de Rêve",
+        orElse: () => null,
+      );
+      
+      if (classeDeReveActivity != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ActivityDetailsScreen(activity: classeDeReveActivity),
+          ),
+        );
+      } else {
+        // Show error message if activity not found
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Classe de Rêve non trouvée"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error loading Classe de Rêve: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Erreur lors du chargement de la Classe de Rêve"),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -76,12 +143,38 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.play_circle_sharp, color: const Color.fromARGB(255, 0, 0, 0)),
-                title: Text("Activités", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                title: Text("Activités familiales", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
                 onTap: () => _onItemTapped(3),
+              ),
+                 ListTile(
+                leading: Icon(Icons.map, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Horaire samedi", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () async {
+                  Navigator.pop(context); // Close the drawer
+                  final url = Uri.parse("https://drive.google.com/file/d/1zLaRkMsMfnysEoNZqQSLeChFlvub3HT8/view");
+                  try {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  } catch (e) {
+                    print('Could not launch $url: $e');
+                  }
+                },
+              ),
+                 ListTile(
+                leading: Icon(Icons.map, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Horaire dimanche", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () async {
+                  Navigator.pop(context); // Close the drawer
+                  final url = Uri.parse("https://drive.google.com/file/d/11bQbU7ytftqz0EKeQL8IHkQoyoq7rzlx/view");
+                  try {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  } catch (e) {
+                    print('Could not launch $url: $e');
+                  }
+                },
               ),
               ListTile(
                 leading: Icon(Icons.mic, color: const Color.fromARGB(255, 0, 0, 0)),
-                title: Text("Conférences", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                title: Text("Conférences VIP", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
                 onTap: () => _onItemTapped(4),
               ),
               ListTile(
@@ -104,7 +197,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.my_library_books, color: const Color.fromARGB(255, 0, 0, 0)),
-                title: Text("Cahier de programmation", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                title: Text("Cahier des visiteurs", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
                 onTap: () async {
                   Navigator.pop(context); // Close the drawer
                   final url = Uri.parse("https://drive.google.com/file/d/1uryOPuDiavV_r0hVvZ-YRk9HBFG-EhGP/view");
@@ -119,6 +212,11 @@ class _MainScreenState extends State<MainScreen> {
                 leading: Icon(Icons.favorite, color: const Color.fromARGB(255, 0, 0, 0)),
                 title: Text("Favoris", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
                 onTap: () => _onItemTapped(6),
+              ),
+                ListTile(
+                leading: Icon(Icons.book, color: const Color.fromARGB(255, 0, 0, 0)),
+                title: Text("Classe de rêve", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+                onTap: () => _navigateToClasseDeReve(),
               ),
             ],
           ),

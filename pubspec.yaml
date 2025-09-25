@@ -2,7 +2,7 @@ name: event_app
 description: "Application officielle du Salon national de l'éducation - Découvrez les exposants, conférences et activités."
 publish_to: 'none' 
 
-version: 3.0.4+10
+version: 3.0.5+11
 
 environment:
   sdk: ^3.7.0
@@ -35,6 +35,15 @@ dependencies:
   cached_network_image: ^3.1.0
 
   flutter_launcher_icons: ^0.13.1
+  
+  # 📦 Package info pour obtenir la version de l'app
+  package_info_plus: ^4.2.0
+  
+  # 🔧 Détection de plateforme
+  io: ^1.0.4
+  
+  # 🌐 WebView pour formulaires intégrés
+  webview_flutter: ^4.4.2
 
 dev_dependencies:
   flutter_test:
