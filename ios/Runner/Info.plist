@@ -75,15 +75,30 @@
 	
 	<!-- Required Minimum Version -->
 	<key>LSMinimumSystemVersion</key>
-	<string>12.0</string>
+	<string>13.0</string>
 	
-	<!-- Required Scene Configuration for iOS 13+ -->
-	<key>UISceneDelegate</key>
-	<dict>
-		<key>UISceneConfigurationName</key>
-		<string>Default Configuration</string>
-		<key>UISceneDelegateClassName</key>
-		<string>SceneDelegate</string>
-	</dict>
+	<!-- Required iOS App Store Keys -->
+	<key>CFBundleSupportedPlatforms</key>
+	<array>
+		<string>iPhoneOS</string>
+	</array>
+	
+	<!-- Required for iOS 17+ App Store Submission -->
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	
+	<!-- App Store Required Categories -->
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.education</string>
+	
+	<!-- Required Status Bar Style -->
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
+	
+	<!-- Required View Controller Based Status Bar -->
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 </dict>
 </plist>
