@@ -73,16 +73,6 @@
 		<true/>
 	</dict>
 	
-	<!-- Required Minimum Version -->
-	<key>LSMinimumSystemVersion</key>
-	<string>13.0</string>
-	
-	<!-- Required iOS App Store Keys -->
-	<key>CFBundleSupportedPlatforms</key>
-	<array>
-		<string>iPhoneOS</string>
-	</array>
-	
 	<!-- Required for iOS 17+ App Store Submission -->
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
