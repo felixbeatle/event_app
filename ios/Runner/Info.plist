@@ -50,37 +50,8 @@
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
 	
-	<!-- Privacy Descriptions Required by App Store -->
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Cette application peut accéder à la photothèque pour partager du contenu</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Cette application peut accéder à l'appareil photo pour partager des photos</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Cette application peut utiliser votre localisation pour vous aider à naviguer</string>
-	
-	<!-- Required iOS 17+ App Store Keys -->
+	<!-- Required iOS App Store Keys -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	
-	<!-- Required for WebView -->
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
-	
-	<!-- Required for iOS 17+ App Store Submission -->
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>arm64</string>
-	</array>
-	
-	<!-- Required Status Bar Style -->
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleDefault</string>
-	
-	<!-- Required View Controller Based Status Bar -->
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
 </dict>
 </plist>
