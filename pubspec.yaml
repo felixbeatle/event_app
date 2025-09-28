@@ -2,7 +2,7 @@ name: event_app
 description: "Application officielle du Salon national de l'éducation - Découvrez les exposants, conférences et activités."
 publish_to: 'none' 
 
-version: 3.0.5+14
+version: 3.0.5+15
 
 environment:
   sdk: ^3.7.0

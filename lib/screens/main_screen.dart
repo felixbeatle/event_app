@@ -8,8 +8,6 @@ import 'activities_screen.dart';
 import 'contributors_screen.dart'; // Import the ContributorsScreen
 import 'activity_details.dart'; // Import for Classe de Rêve navigation
 import 'package:event_app/services/activity_service.dart'; // Import ActivityService
-import 'package:event_app/services/version_check_service.dart'; // Import VersionCheckService
-import 'package:event_app/widgets/update_dialog.dart'; // Import UpdateDialog
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 
 class MainScreen extends StatefulWidget {
@@ -19,7 +17,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  final VersionCheckService _versionCheckService = VersionCheckService();
 
   final List<Widget> _screens = [
     HomeScreen(),
@@ -50,11 +47,8 @@ class _MainScreenState extends State<MainScreen> {
   /// Check for app updates
   Future<void> _checkForUpdates() async {
     try {
-      final updateInfo = await _versionCheckService.checkForUpdate();
-      
-      if (updateInfo.needsUpdate && mounted) {
-        UpdateDialog.show(context, updateInfo);
-      }
+      // Version checking removed to fix iOS binary rejection
+      // Apple doesn't allow external version checking that bypasses App Store
     } catch (e) {
       print('Error checking for updates: $e');
       // Silently fail - don't bother user with update check errors
