@@ -61,10 +61,6 @@
 	<!-- Required iOS 17+ App Store Keys -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>NSSupportsAutomaticTermination</key>
-	<true/>
-	<key>NSSupportsSuddenTermination</key>
-	<true/>
 	
 	<!-- Required for WebView -->
 	<key>NSAppTransportSecurity</key>
@@ -76,7 +72,7 @@
 	<!-- Required for iOS 17+ App Store Submission -->
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
 	
 	<!-- Required Status Bar Style -->
