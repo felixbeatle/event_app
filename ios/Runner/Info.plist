@@ -89,10 +89,6 @@
 		<string>armv7</string>
 	</array>
 	
-	<!-- App Store Required Categories -->
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.education</string>
-	
 	<!-- Required Status Bar Style -->
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleDefault</string>
