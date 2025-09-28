@@ -33,8 +33,8 @@ android {
         applicationId = "com.felixservice.salonapprentissage"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 17
-        versionName = "3.0.5"
+        versionCode = 1
+        versionName = "3.0.6"
     }
 
     signingConfigs {
