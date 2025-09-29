@@ -33,7 +33,7 @@ android {
         applicationId = "com.felixservice.salonapprentissage"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 5
+        versionCode = 7
         versionName = "3.0.6"
     }
 

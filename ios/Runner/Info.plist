@@ -49,9 +49,5 @@
 	<!-- ✅ Clé ajoutée pour l'icône de l'application -->
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
-	
-	<!-- Required iOS App Store Keys -->
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 </dict>
 </plist>
